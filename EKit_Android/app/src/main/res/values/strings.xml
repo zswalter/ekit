@@ -12,8 +12,13 @@
 
 
 
-<!--    Activity Title Strings -->
+<!--    Menu item titles Strings -->
+    <string name="logout_title">"Log Out"</string>
 
+
+
+
+<!--    Activity Title Strings -->
     <string name="login_activity_title">"E-Kit Login"</string>
     <string name="activity_user_homepage_title">"User Portal"</string>
 
