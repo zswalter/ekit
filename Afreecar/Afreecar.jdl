@@ -1,0 +1,40 @@
+application {
+  config {
+    applicationType monolith
+    authenticationType jwt
+    baseName Afreecar
+    blueprints []
+    buildTool maven
+    cacheProvider ehcache
+    clientFramework angularX
+    clientPackageManager npm
+    clientTheme none
+    creationTimestamp 1600878155541
+    databaseType sql
+    devDatabaseType h2Disk
+    dtoSuffix DTO
+    embeddableLaunchScript false
+    enableHibernateCache true
+    enableSwaggerCodegen false
+    enableTranslation true
+    jhiPrefix jhi
+    jhipsterVersion "6.10.3"
+    jwtSecretKey "MGM4YmYxMzk5NWIwM2U0YWUwNjNhODkwNzgyYzc3N2JmM2Y5MjVhZmE0MjE2Yzc1MGRjZDgyMjZlNTc1ZGExZDlkNzA2ODMwMmEzZjRiYWM2OGJiOGYzMjU0OTMzMzgyNTgyMTcwNTkzNjExYTA0NjVkNWQyNzY2ZjQ0ZjQ4ZTQ="
+    languages [en]
+    messageBroker false
+    nativeLanguage en
+    otherModules []
+    packageName com.afreecar.survey
+    prodDatabaseType mysql
+    searchEngine false
+    serverPort 8080
+    serviceDiscoveryType eureka
+    skipClient true
+    skipServer false
+    skipUserManagement false
+    testFrameworks []
+    useSass true
+    websocket false
+  }
+}
+
