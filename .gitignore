@@ -1,0 +1,46 @@
+# Eclipse Core      
+.project
+
+# JDT-specific (Eclipse Java Development Tools)     
+.classpat
+
+# Java related
+target/**
+*.jar
+*.war
+*.ear
+*.class
+*/META-INF/*
+
+# eclipse specific
+*.pydevproject
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.*.sw[op]
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
