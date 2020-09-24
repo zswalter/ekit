@@ -1,0 +1,35 @@
+{
+  "name": "Product",
+  "fields": [
+    {
+      "fieldName": "productName",
+      "fieldType": "String",
+      "fieldValidateRules": ["required"]
+    },
+    {
+      "fieldName": "productID",
+      "fieldType": "Integer",
+      "fieldValidateRules": ["required", "unique"]
+    },
+    {
+      "fieldName": "productDescription",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "productImage",
+      "fieldType": "String"
+    }
+  ],
+  "relationships": [],
+  "changelogDate": "20200924124025",
+  "entityTableName": "product",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": ["Afreecar"]
+}

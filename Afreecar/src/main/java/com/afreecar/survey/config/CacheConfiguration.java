@@ -46,6 +46,12 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
+            createCache(cm, com.afreecar.survey.domain.Ticket.class.getName());
+            createCache(cm, com.afreecar.survey.domain.Product.class.getName());
+            createCache(cm, com.afreecar.survey.domain.SurveyQuestion.class.getName());
+            createCache(cm, com.afreecar.survey.domain.SurveyAnswer.class.getName());
+            createCache(cm, com.afreecar.survey.domain.TicketSurveyMap.class.getName());
+            createCache(cm, com.afreecar.survey.domain.TicketComment.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }
