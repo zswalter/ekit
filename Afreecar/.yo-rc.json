@@ -42,5 +42,5 @@
     "skipServer": false,
     "useSass": true
   },
-  "entities": []
+  "entities": ["Ticket", "Product", "SurveyQuestion", "SurveyAnswer", "TicketSurveyMap", "User", "TicketComment"]
 }
