@@ -9,28 +9,12 @@
         <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
         <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
       </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
-      <path>
-        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
-        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
-      </path>
     </expand>
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1b562808-3160-4810-bb89-e032a4728190" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../EKit_Android/.idea/modules/EKit.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EKit_Android/.idea/modules/app/EKit.app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/afreecar.iml" beforeDir="false" afterPath="$PROJECT_DIR$/afreecar.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/jhipster-jdl.jdl" beforeDir="false" afterPath="$PROJECT_DIR$/jhipster-jdl.jdl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EKit_Android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../EKit_Android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EKit_Android/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../EKit_Android/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+    <list default="true" id="8cbacd8a-dbd8-4161-818c-5cedb009756b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/afreecar/main/AFreeCarApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/afreecar/main/AfreecarApp.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,7 +22,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -47,16 +31,13 @@
       </MavenGeneralSettings>
     </option>
   </component>
-  <component name="ProjectId" id="1hv8DyzyWDfEshyYT8VYcnEn3kJ" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1iD04Rq37nqeDhNLly5fKSFUNUq" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
   </component>
@@ -72,9 +53,9 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="AfreecarApp" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <configuration name="Afre" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <module name="afreecar" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.afreecar.survey.AfreecarApp" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.afreecar.main.Afre" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -83,14 +64,12 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="1b562808-3160-4810-bb89-e032a4728190" name="Default Changelist" comment="" />
-      <created>1600880092046</created>
+      <changelist id="8cbacd8a-dbd8-4161-818c-5cedb009756b" name="Default Changelist" comment="" />
+      <created>1601426665903</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1600880092046</updated>
-      <workItem from="1600880093777" duration="866000" />
-      <workItem from="1600883809341" duration="42000" />
-      <workItem from="1600948938409" duration="2145000" />
+      <updated>1601426665903</updated>
+      <workItem from="1601426667465" duration="142000" />
     </task>
     <servers />
   </component>
@@ -107,11 +86,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="908" y="389" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog" timestamp="1600949347037">
-      <screen x="0" y="0" width="2560" height="1400" />
-    </state>
-    <state x="908" y="389" key="#com.intellij.ide.util.frameworkSupport.AddFrameworkSupportDialog/0.0.2560.1400/-2560.0.2560.1400@0.0.2560.1400" timestamp="1600949347037" />
   </component>
 </project>

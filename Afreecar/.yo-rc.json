@@ -1,14 +1,14 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "com.afreecar.survey",
+      "packageName": "com.afreecar.main",
       "nativeLanguage": "en"
     },
     "jhipsterVersion": "6.10.3",
     "applicationType": "monolith",
     "baseName": "Afreecar",
-    "packageName": "com.afreecar.survey",
-    "packageFolder": "com/afreecar/survey",
+    "packageName": "com.afreecar.main",
+    "packageFolder": "com/afreecar/main",
     "serverPort": "8080",
     "authenticationType": "jwt",
     "cacheProvider": "ehcache",
@@ -24,23 +24,24 @@
     "enableSwaggerCodegen": false,
     "jwtSecretKey": "MGM4YmYxMzk5NWIwM2U0YWUwNjNhODkwNzgyYzc3N2JmM2Y5MjVhZmE0MjE2Yzc1MGRjZDgyMjZlNTc1ZGExZDlkNzA2ODMwMmEzZjRiYWM2OGJiOGYzMjU0OTMzMzgyNTgyMTcwNTkzNjExYTA0NjVkNWQyNzY2ZjQ0ZjQ4ZTQ=",
     "embeddableLaunchScript": false,
-    "creationTimestamp": 1600878155541,
+    "useSass": true,
+    "clientPackageManager": "npm",
+    "clientFramework": "angularX",
+    "clientTheme": "none",
+    "clientThemeVariant": "primary",
+    "creationTimestamp": 1601425300183,
     "testFrameworks": [],
     "jhiPrefix": "jhi",
     "entitySuffix": "",
     "dtoSuffix": "DTO",
     "otherModules": [],
     "enableTranslation": true,
-    "clientPackageManager": "npm",
     "nativeLanguage": "en",
     "languages": ["en"],
     "blueprints": [],
+    "skipUserManagement": false,
     "skipClient": true,
-    "clientFramework": "angularX",
-    "skipUserManagement": true,
-    "clientTheme": "none",
-    "skipServer": false,
-    "useSass": true
+    "skipServer": false
   },
-  "entities": ["Ticket", "Product", "SurveyQuestion", "SurveyAnswer", "TicketSurveyMap", "User", "TicketComment"]
+  "entities": []
 }

@@ -4,12 +4,17 @@
     {
       "fieldName": "idSurveyQuestion",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "questionText",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "isActive",
@@ -17,7 +22,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20200924124125",
+  "changelogDate": "20200930005430",
   "entityTableName": "survey_question",
   "dto": "no",
   "pagination": "no",
@@ -27,5 +32,5 @@
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": ["Afreecar"]
+  "applications": "*"
 }

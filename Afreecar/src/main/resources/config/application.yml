@@ -116,13 +116,6 @@ spring:
     basename: i18n/messages
   main:
     allow-bean-definition-overriding: true
-  security:
-    user:
-      name: admin
-      password: admin
-      roles:
-        - ADMIN
-        - USER
   task:
     execution:
       thread-name-prefix: afreecar-task-

@@ -14,17 +14,17 @@
     <property name="uuidType" value="varchar(36)" dbms="h2, mysql, mariadb"/>
 
     <include file="config/liquibase/changelog/00000000000000_initial_schema.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924123925_added_entity_Ticket.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124025_added_entity_Product.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124125_added_entity_SurveyQuestion.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124225_added_entity_SurveyAnswer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124325_added_entity_TicketSurveyMap.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124525_added_entity_TicketComment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005230_added_entity_Ticket.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005330_added_entity_Product.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005430_added_entity_SurveyQuestion.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005530_added_entity_SurveyAnswer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005630_added_entity_TicketSurveyMap.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005730_added_entity_TicketComment.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
-    <include file="config/liquibase/changelog/20200924123925_added_entity_constraints_Ticket.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124225_added_entity_constraints_SurveyAnswer.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124325_added_entity_constraints_TicketSurveyMap.xml" relativeToChangelogFile="false"/>
-    <include file="config/liquibase/changelog/20200924124525_added_entity_constraints_TicketComment.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005230_added_entity_constraints_Ticket.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005530_added_entity_constraints_SurveyAnswer.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005630_added_entity_constraints_TicketSurveyMap.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20200930005730_added_entity_constraints_TicketComment.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
     <!-- jhipster-needle-liquibase-add-incremental-changelog - JHipster will add incremental liquibase changelogs here -->
 </databaseChangeLog>

@@ -17,7 +17,7 @@ logging:
   level:
     ROOT: INFO
     io.github.jhipster: INFO
-    com.afreecar.survey: INFO
+    com.afreecar.main: INFO
 
 eureka:
   instance:

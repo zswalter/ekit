@@ -4,12 +4,17 @@
     {
       "fieldName": "idTicket",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "idUser",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "created",
@@ -55,7 +60,7 @@
       "ownerSide": true
     }
   ],
-  "changelogDate": "20200924123925",
+  "changelogDate": "20200930005230",
   "entityTableName": "ticket",
   "dto": "no",
   "pagination": "no",
@@ -65,5 +70,5 @@
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": ["Afreecar"]
+  "applications": "*"
 }

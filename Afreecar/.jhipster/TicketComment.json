@@ -4,22 +4,31 @@
     {
       "fieldName": "idComment",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "idTicket",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "idUser",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "content",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "created",
@@ -36,7 +45,7 @@
       "otherEntityField": "id"
     }
   ],
-  "changelogDate": "20200924124525",
+  "changelogDate": "20200930005730",
   "entityTableName": "ticket_comment",
   "dto": "no",
   "pagination": "no",
@@ -46,5 +55,5 @@
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": ["Afreecar"]
+  "applications": "*"
 }

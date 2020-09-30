@@ -4,12 +4,17 @@
     {
       "fieldName": "productName",
       "fieldType": "String",
-      "fieldValidateRules": ["required"]
+      "fieldValidateRules": [
+        "required"
+      ]
     },
     {
       "fieldName": "productID",
       "fieldType": "Integer",
-      "fieldValidateRules": ["required", "unique"]
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
     },
     {
       "fieldName": "productDescription",
@@ -21,7 +26,7 @@
     }
   ],
   "relationships": [],
-  "changelogDate": "20200924124025",
+  "changelogDate": "20200930005330",
   "entityTableName": "product",
   "dto": "no",
   "pagination": "no",
@@ -31,5 +36,5 @@
   "readOnly": false,
   "embedded": false,
   "clientRootFolder": "",
-  "applications": ["Afreecar"]
+  "applications": "*"
 }
