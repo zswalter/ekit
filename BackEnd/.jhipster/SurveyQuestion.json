@@ -1,0 +1,29 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [],
+  "fields": [
+    {
+      "fieldName": "questionText",
+      "fieldType": "String"
+    },
+    {
+      "fieldName": "isActive",
+      "fieldType": "Boolean"
+    },
+    {
+      "fieldName": "questionType",
+      "fieldType": "QuestionType",
+      "fieldValues": "MULTI,RANGE,INPUT"
+    }
+  ],
+  "changelogDate": "20200930154826",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "survey_question",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

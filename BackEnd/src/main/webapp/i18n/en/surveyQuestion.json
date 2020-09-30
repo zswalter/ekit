@@ -1,0 +1,24 @@
+{
+  "backEndApp": {
+    "surveyQuestion": {
+      "home": {
+        "title": "Survey Questions",
+        "createLabel": "Create a new Survey Question",
+        "createOrEditLabel": "Create or edit a Survey Question",
+        "notFound": "No Survey Questions found"
+      },
+      "created": "A new Survey Question is created with identifier {{ param }}",
+      "updated": "A Survey Question is updated with identifier {{ param }}",
+      "deleted": "A Survey Question is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Survey Question {{ id }}?"
+      },
+      "detail": {
+        "title": "Survey Question"
+      },
+      "questionText": "Question Text",
+      "isActive": "Is Active",
+      "questionType": "Question Type"
+    }
+  }
+}

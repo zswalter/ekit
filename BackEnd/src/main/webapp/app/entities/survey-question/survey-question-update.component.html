@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+            <h2 id="jhi-survey-question-heading" jhiTranslate="backEndApp.surveyQuestion.home.createOrEditLabel">Create or edit a Survey Question</h2>
+
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+
+                <div class="form-group" [hidden]="!editForm.get('id')!.value">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id" formControlName="id" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="backEndApp.surveyQuestion.questionText" for="field_questionText">Question Text</label>
+                    <input type="text" class="form-control" name="questionText" id="field_questionText"
+                           formControlName="questionText"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="backEndApp.surveyQuestion.isActive" for="field_isActive">Is Active</label>
+                    <input type="checkbox" class="form-control" name="isActive" id="field_isActive"
+                           formControlName="isActive"/>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="backEndApp.surveyQuestion.questionType" for="field_questionType">Question Type</label>
+                    <select class="form-control" name="questionType" formControlName="questionType" id="field_questionType">
+                        <option value="MULTI">{{ 'backEndApp.QuestionType.MULTI' | translate }}</option>
+                        <option value="RANGE">{{ 'backEndApp.QuestionType.RANGE' | translate }}</option>
+                        <option value="INPUT">{{ 'backEndApp.QuestionType.INPUT' | translate }}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary" (click)="previousState()">
+                    <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+
+                <button type="submit" id="save-entity" [disabled]="editForm.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

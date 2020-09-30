@@ -1,0 +1,28 @@
+{
+  "fluentMethods": true,
+  "clientRootFolder": "",
+  "relationships": [
+    {
+      "relationshipName": "surveyQuestion",
+      "otherEntityName": "surveyQuestion",
+      "relationshipType": "many-to-one",
+      "otherEntityField": "id",
+      "otherEntityRelationshipName": "surveyAnswer"
+    }
+  ],
+  "fields": [
+    {
+      "fieldName": "answerText",
+      "fieldType": "String"
+    }
+  ],
+  "changelogDate": "20200930155620",
+  "dto": "no",
+  "searchEngine": false,
+  "service": "no",
+  "entityTableName": "survey_answer",
+  "databaseType": "sql",
+  "readOnly": false,
+  "jpaMetamodelFiltering": false,
+  "pagination": "no"
+}

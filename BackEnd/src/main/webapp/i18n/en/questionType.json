@@ -1,0 +1,10 @@
+{
+  "backEndApp": {
+    "QuestionType": {
+      "null": "",
+      "MULTI": "MULTI",
+      "RANGE": "RANGE",
+      "INPUT": "INPUT"
+    }
+  }
+}

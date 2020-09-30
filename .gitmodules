@@ -1,0 +1,3 @@
+[submodule "EKitBackend"]
+	path = EKitBackend
+	url = https://github.com/AndreasE1957/EKitBackend.git
