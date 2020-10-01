@@ -27,6 +27,7 @@ import android.widget.Toast;
 
 import com.oakland.ekit.R;
 import com.oakland.ekit.SettingsManager;
+import com.oakland.ekit.SurveyActivity;
 import com.oakland.ekit.UserHomepageActivity;
 import com.oakland.ekit.data.model.LoggedInUser;
 import com.oakland.ekit.ui.login.LoginViewModel;
@@ -187,7 +188,7 @@ public class LoginActivity extends AppCompatActivity {
         //Check if they are regular user or special user
         if(!user.getIsSpecial()){
 
-            Intent i = new Intent(this, UserHomepageActivity.class);
+            Intent i = new Intent(this, SurveyActivity.class);
             mContext.startActivity(i);
 
 
