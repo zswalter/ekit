@@ -7,12 +7,23 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class UserHomepageActivity extends AppCompatActivity {
 
 
     private final static String TAG = UserHomepageActivity.class.getSimpleName();
     private Context mContext = null;
+
+    private RecyclerView recyclerView;
+    private MainListAdapter mainListAdapter;
+    private List<MainListData> mainListDataList = new ArrayList<>();
 
     private TextView lblTempTextView;
 
@@ -31,8 +42,29 @@ public class UserHomepageActivity extends AppCompatActivity {
         lblTempTextView.setText(welcomeString);
 
 
+        recyclerView = findViewById(R.id.recyclerViewMainOptions);
+        mainListAdapter = new MainListAdapter(mainListDataList);
+        RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(manager);
+        recyclerView.setAdapter(mainListAdapter);
 
 
+        dataPrepare();
+
+    }
+
+    private void dataPrepare() {
+        MainListData data = new MainListData("Profile", 25);
+        mainListDataList.add(data);
+        data = new MainListData("Survey", 20);
+        mainListDataList.add(data);
+
+//        Collections.sort(mainListDataList, new Comparator() {
+//            @Override
+//            public int compare(MainListData o1, MainListData o2) {
+//                return o1.name.compareTo(o2.name);
+//            }
+//        });
     }
 
 
