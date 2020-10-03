@@ -1,5 +1,8 @@
 package com.oakland.ekit;
 
+import android.nfc.Tag;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -14,6 +17,10 @@ public class ServerManager {
 
 
 
+    private String TAG = ServerManager.class.getSimpleName();
+
+
+    //Constructor
     ServerManager(){
 
 
@@ -40,6 +47,30 @@ public class ServerManager {
         }
 
         return new JSONObject(); //TEMP
+
+    }
+
+
+
+    //Used to create a new user on the server
+    public boolean createNewUser(String fName, String lName, String username, String pass){
+
+        //TODO: finish by calling to server and get response?
+
+        try{
+
+            //Make the call to the server to create the user
+            return true;
+
+        }catch (Exception e){
+
+            Log.d(TAG, e.toString());
+
+            return false;
+
+
+        }
+
 
     }
 

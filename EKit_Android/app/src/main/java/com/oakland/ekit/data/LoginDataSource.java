@@ -22,7 +22,7 @@ public class LoginDataSource {
             if(credentials != null){
 
                 //TODO: temp (need to parse out)
-                LoggedInUser fakeUser = new LoggedInUser(java.util.UUID.randomUUID().toString(),"Jane Doe",false, new JSONObject());
+                LoggedInUser fakeUser = new LoggedInUser(java.util.UUID.randomUUID().toString(),"Zachary Denny",false, new JSONObject());
 
                 //return the success user
                 return new Result.Success<>(fakeUser);
