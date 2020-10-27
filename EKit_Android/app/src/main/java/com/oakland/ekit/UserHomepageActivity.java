@@ -1,22 +1,34 @@
 package com.oakland.ekit;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.oakland.ekit.ui.login.LoginViewModelFactory;
+import com.oakland.ekit.viewModels.UserHomePageViewModel;
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class UserHomepageActivity extends AppCompatActivity {
+public class UserHomepageActivity extends AppCompatActivity implements RecyclerView.OnItemTouchListener, View.OnClickListener {
 
+    private UserHomePageViewModel mViewModel = null;
 
     private final static String TAG = UserHomepageActivity.class.getSimpleName();
     private Context mContext = null;
@@ -24,6 +36,7 @@ public class UserHomepageActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MainListAdapter mainListAdapter;
     private List<MainListData> mainListDataList = new ArrayList<>();
+    private Button btnSideView = null;
 
     private TextView lblTempTextView;
 
@@ -33,31 +46,63 @@ public class UserHomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
 
+        //Remove notification bar and set the context view
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_user_homepage);
 
+        //set the view model
+        this.mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory()).get(UserHomePageViewModel.class);
+
+        //Call to init the ui
+        initUI();
+
+        //prepare the data for the table view
+        dataPrepare();
+
+
+
+    }
+
+
+
+    //Used to init the UI
+    private void initUI(){
+
+
+        this.btnSideView = findViewById(R.id.btnSideMenu);
+        this.btnSideView.setOnClickListener(this);
 
         //temp stuff
         lblTempTextView = findViewById(R.id.lblTempTextLabel);
-        String welcomeString = getString(R.string.welcome) + SettingsManager.sharedInstance.mLoggedInUser.getDisplayName();
+        String welcomeString = getString(R.string.welcome) + mViewModel.getLoggedInUser().getDisplayName();
         lblTempTextView.setText(welcomeString);
 
 
         recyclerView = findViewById(R.id.recyclerViewMainOptions);
+        //add adapters and on touch listener and grid layout
         mainListAdapter = new MainListAdapter(mainListDataList);
+        recyclerView.addOnItemTouchListener(this);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(mainListAdapter);
 
 
-        dataPrepare();
-
     }
 
     private void dataPrepare() {
-        MainListData data = new MainListData("Profile", 25);
+
+        //TODO: remove the age param
+        MainListData data = new MainListData("Account Information", 25);
         mainListDataList.add(data);
         data = new MainListData("Survey", 20);
         mainListDataList.add(data);
+        data = new MainListData("Product Guide", 20);
+        mainListDataList.add(data);
+        data = new MainListData("Diagnosis Tool", 20);
+        mainListDataList.add(data);
+        data = new MainListData("Assembly Guide", 20);
+        mainListDataList.add(data);
+
 
 //        Collections.sort(mainListDataList, new Comparator() {
 //            @Override
@@ -69,11 +114,27 @@ public class UserHomepageActivity extends AppCompatActivity {
 
 
 
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu){
+//        //add the menu to the view
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//    }
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu){
-        //add the menu to the view
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
+    public void onBackPressed(){
+
+        //Build a warning popup box
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        builder.setTitle(R.string.title_are_you_sure).setMessage(R.string.message_back_pressed_exit_app)
+                .setNeutralButton("Cancel", null)
+                .setNegativeButton("Continue", (dialogInterface, i) -> {
+
+                    super.onBackPressed();
+
+                }).create().show();
+
     }
 
 
@@ -87,11 +148,12 @@ public class UserHomepageActivity extends AppCompatActivity {
         //check which menu item was pressed
         if(id == android.R.id.home){
 
-            //TODO: if user presses the home button maybe do something??
+            //TODO: if user presses the home button maybe do something?? what is this button???
 
         }
         else if(id == R.id.action_logout){
-            //TODO: call to logout user
+            //Call to logout the user
+            mViewModel.logOutUser();
             finish();
         }
 
@@ -99,4 +161,95 @@ public class UserHomepageActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+        //check if this is a table item that has been selected
+        if(rv.equals(recyclerView) && e.getAction() == MotionEvent.ACTION_DOWN){
+
+
+            View childView = rv.findChildViewUnder(e.getX(), e.getY());
+
+            int index = rv.getChildAdapterPosition(childView);
+
+            //make sure its not outside of a card
+            if (index != -1){
+
+
+                Log.v(TAG, "Index: " + index + " Touched");
+
+
+                switch (index){
+
+                    case 0: //Account Info
+
+                        mContext.startActivity(new Intent(this, UserInformationActivity.class));
+
+                        break;
+
+                    case 1: //Survey
+
+                        mContext.startActivity(new Intent(this, SurveyActivity.class));
+
+
+                        break;
+
+                    default:
+
+                        //not available feature yet
+                        Toast.makeText(mContext, "Feature Not Available Yet!", Toast.LENGTH_LONG).show();
+
+                        break;
+
+
+
+                }
+
+
+
+                return true;
+
+            }
+
+
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        //determine which view is clicked
+        switch (view.getId()){
+
+            case R.id.btnSideMenu:
+
+
+                //add popup menu to the button
+                PopupMenu po=new PopupMenu(UserHomepageActivity.this, view);
+                po.getMenuInflater().inflate(R.menu.main_menu, po.getMenu());
+                po.setOnMenuItemClickListener(this::onOptionsItemSelected);
+
+                //show the menu
+                po.show();
+
+
+                break;
+
+
+        }
+
+
+    }
 }

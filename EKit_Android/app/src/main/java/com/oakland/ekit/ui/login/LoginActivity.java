@@ -52,8 +52,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mContext = this;
         setContentView(R.layout.activity_login);
+
+        //update settings manager first
+        SettingsManager.sharedInstance.updateSettings(mContext);
+
+        //get view model
         mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+
+
+        //see if we are already logged in and if so, lets continue
+        if(mViewModel.loginRepository.isLoggedIn()){
+            updateUiWithUser(mViewModel.getLoggedInUser());
+        }
 
         this.mUsernameEditText = findViewById(R.id.username);
         this.mPasswordEditText = findViewById(R.id.password);
@@ -176,9 +187,6 @@ public class LoginActivity extends AppCompatActivity {
                 //Check if we had a success login
                 if (loginResult.getSuccess() != null) {
 
-                    //It was a success so store the current logged in user
-                    SettingsManager.sharedInstance.mLoggedInUser = loginResult.getSuccess();
-
                     //Login was success so lets call to update the ui
                     updateUiWithUser(loginResult.getSuccess());
                 }
@@ -209,7 +217,7 @@ public class LoginActivity extends AppCompatActivity {
         //Check if they are regular user or special user
         if(!user.getIsSpecial()){
 
-            Intent i = new Intent(this, SurveyActivity.class);
+            Intent i = new Intent(this, UserHomepageActivity.class);
             mContext.startActivity(i);
 
 
