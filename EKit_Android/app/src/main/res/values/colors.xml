@@ -10,8 +10,8 @@
 
     <color name="primaryTextColor">#000000</color>
 
-    <color name="primaryColor">#69A326</color>
-    <color name="primaryDarkColor">#276820</color>
+    <color name="primaryColor">#D66824</color>
+    <color name="primaryDarkColor">#1A3338</color>
     <color name="colorBackgroundTrack">#c1c1c1</color>
 
     <color name="colorBackgroundTrackGreen">#00820E</color>

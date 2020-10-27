@@ -5,7 +5,7 @@
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome Back "</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >8 characters</string>
     <string name="login_failed">"Login failed"</string>
@@ -19,7 +19,7 @@
     <string name="login_activity_title">"E-Kit Login"</string>
     <string name="activity_user_homepage_title">"User Portal"</string>
 
-    <string name="title_activity_survey">SurveyActivity</string>
+    <string name="title_activity_survey">Survey</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -31,6 +31,17 @@
 
     <string name="title_activity_create_user">Create User</string>
 
+    <string name="title_activity_user_info">User Information</string>
+
+
+    <!--    Strings related to popups-->
+    <string name="title_are_you_sure">Are You Sure?</string>
+    <string name="message_back_pressed_exit_app">Going back will exit the app. Would you like to continue?</string>
+    <string name="message_back_pressed_survey">Going back will clear all your current answers. Would you like to continue?</string>
+
+
+    <!--    Shared pref strings-->
+    <string name="preference_logged_in_user">logged_in_user</string>
 
 
 </resources>

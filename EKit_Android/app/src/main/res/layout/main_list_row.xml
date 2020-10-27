@@ -6,7 +6,7 @@
     card_view:cardCornerRadius = "4dp"
     android:id ="@+id/cardViewMain"
     android:layout_margin = "10dp"
-    android:layout_height = "200dp">
+    android:layout_height = "100dp">
     <LinearLayout
         android:id = "@+id/parent"
         android:layout_gravity = "center"
@@ -19,7 +19,7 @@
             android:id="@+id/cardName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center|left"
             android:text="hi"
             android:textColor="#FFF"
             android:textSize="25sp" />

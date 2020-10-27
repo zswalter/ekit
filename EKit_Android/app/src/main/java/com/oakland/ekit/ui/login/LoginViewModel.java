@@ -39,7 +39,7 @@ public class LoginViewModel extends ViewModel {
             LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
 
             //The result is a success so now return the users data
-            loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData())));
+            loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData(), username, password)));
         } else {
             //If the result was a fail
             loginResult.setValue(new LoginResult(R.string.login_failed));
@@ -72,4 +72,17 @@ public class LoginViewModel extends ViewModel {
     private boolean isPasswordValid(String password) {
         return password != null && password.trim().length() > 8;
     }
+
+
+    //Used to determine if logged in or not
+    public boolean isLoggedIn(){
+        return loginRepository.isLoggedIn();
+    }
+
+    //Used to get the logged in user
+    public LoggedInUser getLoggedInUser(){
+        return loginRepository.getUser();
+    }
+
+
 }
