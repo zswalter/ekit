@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.9.xsd">
+    <!--
+        Added the constraints for entity TicketSurveyMap.
+    -->
+    <changeSet id="20200930004616-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="id_survey_answer_id"
+                                 baseTableName="ticket_survey_map"
+                                 constraintName="fk_ticket_survey_map_id_survey_answer_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="survey_answer"/>
+
+        <addForeignKeyConstraint baseColumnNames="id_ticket_id"
+                                 baseTableName="ticket_survey_map"
+                                 constraintName="fk_ticket_survey_map_id_ticket_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="ticket"/>
+
+    </changeSet>
+</databaseChangeLog>
