@@ -1,0 +1,47 @@
+{
+  "name": "SurveyAnswer",
+  "fields": [
+    {
+      "fieldName": "idSurveyAnswer",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "idQuestion",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "answerText",
+      "fieldType": "String",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "surveyQuestion",
+      "otherEntityRelationshipName": "surveyAnswer",
+      "relationshipValidateRules": "required",
+      "relationshipName": "idSurveyQuestion",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20200930005530",
+  "entityTableName": "survey_answer",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

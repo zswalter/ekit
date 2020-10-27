@@ -1,0 +1,46 @@
+{
+  "name": "TicketSurveyMap",
+  "fields": [
+    {
+      "fieldName": "idTicket",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "idSurveyAnswer",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "surveyAnswer",
+      "otherEntityRelationshipName": "ticketSurveyMap",
+      "relationshipName": "idSurveyAnswer",
+      "otherEntityField": "id"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "ticket",
+      "otherEntityRelationshipName": "ticketSurveyMap",
+      "relationshipName": "idTicket",
+      "otherEntityField": "id"
+    }
+  ],
+  "changelogDate": "20200930005630",
+  "entityTableName": "ticket_survey_map",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}

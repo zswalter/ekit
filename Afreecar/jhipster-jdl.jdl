@@ -1,0 +1,84 @@
+
+entity Ticket{
+   idTicket Integer required unique,
+   idUser Integer required,
+   created ZonedDateTime,
+   closed ZonedDateTime,
+   closeByUserID Integer,
+   productID Integer
+}
+
+/*
+* Product entity
+*/
+entity Product {
+    productName String required,
+    productID Integer required unique,
+    productDescription String,
+    productImage String
+}
+
+entity SurveyQuestion {
+   idSurveyQuestion Integer required unique,
+   questionText String required,
+   isActive Boolean
+}
+
+
+
+entity SurveyAnswer {
+     idSurveyAnswer Integer required,
+     idQuestion Integer required,
+     answerText String required
+}
+
+entity TicketSurveyMap {
+    idTicket Integer required,
+    idSurveyAnswer Integer required
+}
+
+
+entity TicketComment {
+    idComment Integer required unique,
+    idTicket Integer required,
+    idUser Integer required,
+    content String required,
+    created ZonedDateTime
+}
+
+enum Language {
+    FRENCH, ENGLISH, SPANISH, GERMAN, JAPANESE
+}
+
+relationship OneToOne {
+	Ticket{productId} to Product
+}
+
+relationship OneToOne {
+	Ticket{userID required} to User
+}
+
+relationship OneToOne {
+	Ticket{closedByUserID} to User
+}
+
+
+relationship ManyToOne {
+	//Answer
+    TicketSurveyMap{idSurveyAnswer} to SurveyAnswer,
+    //Ticket
+    TicketSurveyMap{idTicket} to Ticket,
+    //Questions
+    SurveyAnswer{idSurveyQuestion required} to SurveyQuestion
+
+}
+relationship ManyToOne {
+	TicketComment{ticketID required} to Ticket
+
+}
+
+ 
+
+
+
+

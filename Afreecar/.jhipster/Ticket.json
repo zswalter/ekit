@@ -1,0 +1,74 @@
+{
+  "name": "Ticket",
+  "fields": [
+    {
+      "fieldName": "idTicket",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required",
+        "unique"
+      ]
+    },
+    {
+      "fieldName": "idUser",
+      "fieldType": "Integer",
+      "fieldValidateRules": [
+        "required"
+      ]
+    },
+    {
+      "fieldName": "created",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "closed",
+      "fieldType": "ZonedDateTime"
+    },
+    {
+      "fieldName": "closeByUserID",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "productID",
+      "fieldType": "Integer"
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "product",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "productId",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipValidateRules": "required",
+      "relationshipName": "userID",
+      "otherEntityField": "id",
+      "ownerSide": true
+    },
+    {
+      "relationshipType": "one-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "ticket",
+      "relationshipName": "closedByUserID",
+      "otherEntityField": "id",
+      "ownerSide": true
+    }
+  ],
+  "changelogDate": "20200930005230",
+  "entityTableName": "ticket",
+  "dto": "no",
+  "pagination": "no",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "clientRootFolder": "",
+  "applications": "*"
+}
