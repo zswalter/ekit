@@ -25,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.oakland.ekit.CreateUserActivity;
 import com.oakland.ekit.R;
 import com.oakland.ekit.SettingsManager;
 import com.oakland.ekit.SurveyActivity;
@@ -41,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     private EditText mUsernameEditText, mPasswordEditText;
-    private Button mLoginButton;
+    private Button mLoginButton, mBtnCreateUser;
     private ProgressBar mLoadingProgressBar;
 
     private LoginFormState mLoginFormState;
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         this.mPasswordEditText = findViewById(R.id.password);
         this.mLoginButton = findViewById(R.id.login);
         this.mLoadingProgressBar = findViewById(R.id.loading);
+        this.mBtnCreateUser = findViewById(R.id.btnCreateAccount);
 
         //Call to init all the observers
         initObservers();
@@ -92,6 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                     //check if text forms are valid first before continuing
                     if(mLoginFormState.isDataValid()){
 
+                        //Attempt the login
                         mViewModel.login(mUsernameEditText.getText().toString(),
                                 mPasswordEditText.getText().toString());
 
@@ -102,15 +105,33 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //On click listener for the actual on screen login btn
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Attempt the login
                 mLoadingProgressBar.setVisibility(View.VISIBLE);
                 mViewModel.login(mUsernameEditText.getText().toString(),
                         mPasswordEditText.getText().toString());
+
+            }
+        });
+
+        //On click listener for create account btn
+        mBtnCreateUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //goto the create user activity
+                Intent i = new Intent(mContext, CreateUserActivity.class);
+                mContext.startActivity(i);
+
             }
         });
     }
+
+
 
 
     //Used to init the observers for the view
