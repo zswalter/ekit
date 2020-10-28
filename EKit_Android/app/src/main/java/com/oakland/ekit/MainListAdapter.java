@@ -2,15 +2,18 @@ package com.oakland.ekit;
 
 
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-        import android.view.LayoutInflater;
+import android.os.Build;
+import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.LinearLayout;
         import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +23,8 @@ import java.util.List;
 
 class MainListAdapter extends RecyclerView.Adapter {
 
+    Context mContext = null;
+
     List mainListDataList;
     public MainListAdapter(List mainDataList) {
         this.mainListDataList = mainDataList;
@@ -28,11 +33,13 @@ class MainListAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        mContext = viewGroup.getContext();
         View itemView = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.main_list_row, viewGroup, false);
         return new MyViewHolder(itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
@@ -42,12 +49,13 @@ class MainListAdapter extends RecyclerView.Adapter {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     public void onBindViewHolderTest(@NonNull MyViewHolder holder, int position) {
         MainListData data= (MainListData) mainListDataList.get(position);
 
-        int backgroundColor = Color.argb(255, 0, 204, 102);
 
-        holder.parent.setBackgroundColor(backgroundColor);
+
+        holder.parent.setBackgroundColor(mContext.getColor(R.color.primaryColor));
         holder.cardName.setText(data.name);
 
 
