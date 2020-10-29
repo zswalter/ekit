@@ -19,6 +19,7 @@ public class SettingsManager{
     Context mContext = null;
 
     private LoggedInUser mLoggedInUser = null;
+    private String mPrivateEncryptionKeySeed = null;
 
     public void updateSettings(Context context){
 
@@ -26,9 +27,15 @@ public class SettingsManager{
 
         //get system pref
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
 
         try {
+
+            //call to get saved encryption key
+            this.retrieveSavedPrivateEncryption(sharedPref, editor);
+
+            //get saved user
             Gson gson = new Gson();
 
             //get the saved user pref
@@ -37,6 +44,11 @@ public class SettingsManager{
 
                 LoggedInUser user = gson.fromJson(json, LoggedInUser.class);
                 if(user != null){
+
+                    //decrypt the value first
+                    user.setmUserName(this.decryptWithPrivateKey(user.getmUserName()));
+                    user.setmPassword(this.decryptWithPrivateKey(user.getmPassword()));
+
                     this.mLoggedInUser = user;
                 }
 
@@ -57,6 +69,31 @@ public class SettingsManager{
     }
 
 
+    //Used to retrieve private encrypt seed
+    private void retrieveSavedPrivateEncryption(SharedPreferences sharedPref, SharedPreferences.Editor editor){
+
+        this.mPrivateEncryptionKeySeed = sharedPref.getString(mContext.getString(R.string.preference_private_encryption_key), null);
+
+        //if its not set yet, lets create a new one
+        if(mPrivateEncryptionKeySeed == null){
+
+            //get a new key now
+            String newKey = this.generateEncryptionKey();
+
+            this.mPrivateEncryptionKeySeed = newKey;
+
+            //add to sys pref
+            editor.putString(mContext.getString(R.string.preference_private_encryption_key), newKey);
+
+            //save
+            editor.apply();
+            editor.commit();
+
+        }
+
+        
+    }
+
 
 
 
@@ -67,17 +104,23 @@ public class SettingsManager{
         return mLoggedInUser;
     }
 
-    public void setSavedLoggedInUser(LoggedInUser mSavedLoggedInUser) {
+    public void setSavedLoggedInUser(LoggedInUser savedLoggedInUser) {
 
-        this.mLoggedInUser = mSavedLoggedInUser;
+        this.mLoggedInUser = savedLoggedInUser;
+
+
+        //perform encryption on username and password
+        LoggedInUser saveInfo = savedLoggedInUser;
+        saveInfo.setmUserName(this.encryptWithPrivateKey(saveInfo.getmUserName()));
+        saveInfo.setmPassword(this.encryptWithPrivateKey(saveInfo.getmPassword()));
 
         //get system pref
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        //convert to json and save
+        //convert to json and save the instance with encryption
         Gson gson = new Gson();
-        String json = gson.toJson(this.mLoggedInUser);
+        String json = gson.toJson(saveInfo);
         editor.putString(mContext.getString(R.string.preference_logged_in_user), json);
 
         editor.apply();
@@ -90,8 +133,8 @@ public class SettingsManager{
 
     }
 
+    //Used to perform the logout functions for the saved user
     public void perfromLogout() {
-        //TODO: clear the save user from saved pref (set to null)
 
         //get system pref
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -105,6 +148,35 @@ public class SettingsManager{
 
 
 
+    //Used to generate a random key to use to encrypt with
+    private String generateEncryptionKey(){
+
+        String randomString = java.util.UUID.randomUUID().toString();
+
+        return randomString;
+
+    }
+
+
+    //Used to retrieve the private encryption key
+    public String getPrivateEncryptionKey(){
+        return this.mPrivateEncryptionKeySeed;
+    }
+
+
+    //used to encrypt with the private key
+    private String encryptWithPrivateKey(String plainStringValue){
+
+        //test some encryption
+        return Utilities.Companion.encrypt(this.mPrivateEncryptionKeySeed, plainStringValue);
+    }
+
+    //used to decrypt with the private key
+    private String decryptWithPrivateKey(String encryptedValue){
+
+        return Utilities.Companion.decrypt(this.mPrivateEncryptionKeySeed, encryptedValue);
+
+    }
 
 
 
