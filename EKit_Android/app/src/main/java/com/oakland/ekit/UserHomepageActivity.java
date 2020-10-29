@@ -26,7 +26,7 @@ import com.oakland.ekit.viewModels.UserHomePageViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserHomepageActivity extends AppCompatActivity implements RecyclerView.OnItemTouchListener, View.OnClickListener {
+public class UserHomepageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private UserHomePageViewModel mViewModel = null;
 
@@ -81,7 +81,6 @@ public class UserHomepageActivity extends AppCompatActivity implements RecyclerV
         recyclerView = findViewById(R.id.recyclerViewMainOptions);
         //add adapters and on touch listener and grid layout
         mainListAdapter = new MainListAdapter(mainListDataList);
-        recyclerView.addOnItemTouchListener(this);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(mainListAdapter);
@@ -160,72 +159,6 @@ public class UserHomepageActivity extends AppCompatActivity implements RecyclerV
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-        //check if this is a table item that has been selected
-        if(rv.equals(recyclerView) && e.getAction() == MotionEvent.ACTION_DOWN){
-
-
-            View childView = rv.findChildViewUnder(e.getX(), e.getY());
-
-            int index = rv.getChildAdapterPosition(childView);
-
-            //make sure its not outside of a card
-            if (index != -1){
-
-
-                Log.v(TAG, "Index: " + index + " Touched");
-
-
-                switch (index){
-
-                    case 0: //Account Info
-
-                        mContext.startActivity(new Intent(this, UserInformationActivity.class));
-
-                        break;
-
-                    case 1: //Survey
-
-                        mContext.startActivity(new Intent(this, SurveyActivity.class));
-
-
-                        break;
-
-                    default:
-
-                        //not available feature yet
-                        Toast.makeText(mContext, "Feature Not Available Yet!", Toast.LENGTH_LONG).show();
-
-                        break;
-
-
-
-                }
-
-
-
-                return true;
-
-            }
-
-
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-    }
-
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-    }
 
     @Override
     public void onClick(View view) {

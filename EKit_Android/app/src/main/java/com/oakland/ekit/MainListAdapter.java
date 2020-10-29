@@ -3,6 +3,7 @@ package com.oakland.ekit;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
         import android.view.ViewGroup;
         import android.widget.LinearLayout;
         import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -54,17 +56,47 @@ class MainListAdapter extends RecyclerView.Adapter {
         MainListData data= (MainListData) mainListDataList.get(position);
 
 
+        //to signify disabled items
+        if(position <= 1){
 
-        holder.parent.setBackgroundColor(mContext.getColor(R.color.primaryColor));
+            holder.parent.setBackgroundColor(mContext.getColor(R.color.primaryColor));
+
+        }else{
+            //disabled
+            holder.parent.setBackgroundColor(mContext.getColor(R.color.disabledOrange));
+        }
+
         holder.cardName.setText(data.name);
 
 
-        holder.parent.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+        holder.parent.setOnClickListener(v -> {
+
+            switch (position){
+
+                case 0: //Account Info
+
+                    mContext.startActivity(new Intent(mContext, UserInformationActivity.class));
+
+                    break;
+
+                case 1: //Survey
+
+                    mContext.startActivity(new Intent(mContext, SurveyActivity.class));
+
+
+                    break;
+
+                default:
+
+                    //not available feature yet
+                    Toast.makeText(mContext, "Feature Not Available Yet!", Toast.LENGTH_SHORT).show();
+
+                    break;
 
 
 
             }
+
         });
 
 

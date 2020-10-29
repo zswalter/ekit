@@ -2,10 +2,11 @@ package com.oakland.ekit.data;
 
 import com.oakland.ekit.ServerManager;
 import com.oakland.ekit.data.model.LoggedInUser;
-
+import com.oakland.ekit.Constants.Companion.UserData;
 import org.json.JSONObject;
-
 import java.io.IOException;
+
+import javax.sql.DataSource;
 
 /**
  * Class that handles authentication w/ login credentials and retrieves user information.
@@ -21,8 +22,20 @@ public class LoginDataSource {
 
             if(credentials != null){
 
+                String randomStringID = java.util.UUID.randomUUID().toString();
+
+                JSONObject fakeObject = new JSONObject();
+
+                fakeObject.put(UserData.FirstName.key(), "Zachary");
+                fakeObject.put(UserData.LastName.key(), "Denny");
+                fakeObject.put(UserData.DOB.key(), "01-27-1997");
+                fakeObject.put(UserData.UserId.key(), randomStringID);
+                fakeObject.put(UserData.IsSpecialUser.key(), false);
+                fakeObject.put(UserData.Email.key(), "zdenny61@outlook.com");
+
+
                 //TODO: temp (need to parse out)
-                LoggedInUser fakeUser = new LoggedInUser(java.util.UUID.randomUUID().toString(),"Zachary Denny",false, new JSONObject(), username, password);
+                LoggedInUser fakeUser = new LoggedInUser(randomStringID,"Zachary Denny",false, fakeObject, username, password);
 
                 //return the success user
                 return new Result.Success<>(fakeUser);

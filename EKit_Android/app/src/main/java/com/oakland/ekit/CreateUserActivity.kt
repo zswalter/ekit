@@ -28,7 +28,6 @@ class CreateUserActivity : AppCompatActivity() {
         //Call to init the ui
         this.initUI()
 
-
     }
 
 

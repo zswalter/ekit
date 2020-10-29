@@ -14,6 +14,8 @@
     <color name="primaryDarkColor">#1A3338</color>
     <color name="colorBackgroundTrack">#c1c1c1</color>
 
+    <color name="disabledOrange">#8B4F24</color>
+
     <color name="colorBackgroundTrackGreen">#00820E</color>
     <color name="colorBackgroundTrackRed">#8C0202</color>
     <!--color name="colorPrimary">#87CEEB</color>
