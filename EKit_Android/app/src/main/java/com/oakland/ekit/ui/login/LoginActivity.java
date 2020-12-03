@@ -25,11 +25,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.oakland.ekit.AdminHomePageActivity;
 import com.oakland.ekit.CreateUserActivity;
 import com.oakland.ekit.R;
 import com.oakland.ekit.SettingsManager;
 import com.oakland.ekit.SurveyActivity;
 import com.oakland.ekit.UserHomepageActivity;
+import com.oakland.ekit.data.Result;
 import com.oakland.ekit.data.model.LoggedInUser;
 import com.oakland.ekit.ui.login.LoginViewModel;
 import com.oakland.ekit.ui.login.LoginViewModelFactory;
@@ -59,6 +61,32 @@ public class LoginActivity extends AppCompatActivity {
         //get view model
         mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
+
+        //create the login result observer //TODO: make sure that this observer is destroyed after you log out to the it does not get called and logged back in
+        Observer<Result<LoggedInUser>> resultObserver = new Observer<Result<LoggedInUser>>() {
+            @Override
+            public void onChanged(Result<LoggedInUser> loggedInUserResult) {
+
+                //see if its a success result or a failed
+                if (loggedInUserResult instanceof Result.Success) {
+                    LoggedInUser data = ((Result.Success<LoggedInUser>) loggedInUserResult).getData();
+
+                    //call to set the logged in user
+                    mViewModel.loginRepository.setLogedInUser(loggedInUserResult);
+
+                    //The result is a success so now return the users data
+                    mViewModel.loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData(), data.getmUserName(), data.getmPassword())));
+                } else {
+                    //If the result was a fail
+                    mViewModel.loginResult.setValue(new LoginResult(R.string.login_failed));
+                }
+
+
+            }
+        };
+
+        //add the observer
+        this.mViewModel.loginRepository.mLoginResult.observe(this, resultObserver);
 
 
         //see if we are already logged in and if so, lets continue
@@ -177,8 +205,6 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
-                boolean test = loginResult.getSuccess().getIsSpecial();
-
                 mLoadingProgressBar.setVisibility(View.GONE);
                 if (loginResult.getError() != null) {
                     showLoginFailed(loginResult.getError());
@@ -186,6 +212,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 //Check if we had a success login
                 if (loginResult.getSuccess() != null) {
+
+                    //TODO: handle this in a way
+                    boolean test = loginResult.getSuccess().getIsSpecial();
 
                     //Login was success so lets call to update the ui
                     updateUiWithUser(loginResult.getSuccess());
@@ -223,8 +252,10 @@ public class LoginActivity extends AppCompatActivity {
 
         }else{
 
-            //They are a special user
-            //TODO: add this
+            //They are a special user so goto admin portal
+            Intent i = new Intent(this, AdminHomePageActivity.class);
+            mContext.startActivity(i);
+
         }
 
 
@@ -234,5 +265,7 @@ public class LoginActivity extends AppCompatActivity {
     //Used to show a login fail
     private void showLoginFailed(@StringRes Integer errorString) {
         Toast.makeText(getApplicationContext(), errorString, Toast.LENGTH_SHORT).show();
+
+        //TODO: make more of a popup box maybe and dismiss the keyboard!
     }
 }

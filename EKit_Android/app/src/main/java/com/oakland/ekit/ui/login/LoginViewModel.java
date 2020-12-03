@@ -1,7 +1,9 @@
 package com.oakland.ekit.ui.login;
 
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import android.util.Patterns;
@@ -13,13 +15,43 @@ import com.oakland.ekit.R;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
-    private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+    public MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
+    public MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     public LoginRepository loginRepository;
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
+
+
+        //TODO: add observer here to watch for the login to happen
+
+//        //create the login result observer
+//        Observer<Result<LoggedInUser>> resultObserver = new Observer<Result<LoggedInUser>>() {
+//            @Override
+//            public void onChanged(Result<LoggedInUser> loggedInUserResult) {
+//
+//                //see if its a success result or a failed
+//                if (loggedInUserResult instanceof Result.Success) {
+//                    LoggedInUser data = ((Result.Success<LoggedInUser>) loggedInUserResult).getData();
+//
+//                    //The result is a success so now return the users data
+//                    loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData(), data.getmUserName(), data.getmPassword())));
+//                } else {
+//                    //If the result was a fail
+//                    loginResult.setValue(new LoginResult(R.string.login_failed));
+//                }
+//
+//
+//            }
+//        };
+//
+//        //add the observer
+//        this.loginRepository.mLoginResult.observe(this, resultObserver);
+
+
     }
+
+
 
     LiveData<LoginFormState> getLoginFormState() {
         return loginFormState;
@@ -32,18 +64,24 @@ public class LoginViewModel extends ViewModel {
     //Used to attempt a login
     public void login(String username, String password) {
         // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
 
+        //TODO: add to async job here and then when the server responds, we can return
+        //Result<LoggedInUser> result = loginRepository.login(username, password);
+        loginRepository.login(username, password); //todo: pass the callback here
+
+        //todo: all this will have to be in a call back that we pass to .login. this will allow the login observer to be called once the call back gets a hit
         //see if its a success result or a failed
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+//        if (result instanceof Result.Success) {
+//            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+//
+//            //The result is a success so now return the users data
+//            loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData(), username, password)));
+//        } else {
+//            //If the result was a fail
+//            loginResult.setValue(new LoginResult(R.string.login_failed));
+//        }
 
-            //The result is a success so now return the users data
-            loginResult.setValue(new LoginResult(new LoggedInUser(data.getUserId(), data.getDisplayName(), data.getIsSpecial(), data.getServerData(), username, password)));
-        } else {
-            //If the result was a fail
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-        }
+
     }
 
     public void loginDataChanged(String username, String password) {
@@ -58,7 +96,7 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder username validation check
     private boolean isUserNameValid(String username) {
-        if (username == null) {
+        if (username == null || username.length() <= 1) {
             return false;
         }
         if (username.contains("@")) {
@@ -70,9 +108,8 @@ public class LoginViewModel extends ViewModel {
 
     // A placeholder password validation check
     private boolean isPasswordValid(String password) {
-        return password != null && password.trim().length() > 8;
+        return password != null && password.trim().length() >= 4;
     }
-
 
     //Used to determine if logged in or not
     public boolean isLoggedIn(){

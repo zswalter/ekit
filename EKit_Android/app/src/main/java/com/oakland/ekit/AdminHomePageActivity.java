@@ -2,13 +2,9 @@ package com.oakland.ekit;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -17,30 +13,26 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.JsonObject;
 import com.oakland.ekit.ui.login.LoginViewModelFactory;
-import com.oakland.ekit.viewModels.UserHomePageViewModel;
-
-import org.json.JSONObject;
+import com.oakland.ekit.viewModels.AdminHomePageViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserHomepageActivity extends AppCompatActivity implements View.OnClickListener {
+public class AdminHomePageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private UserHomePageViewModel mViewModel = null;
+    private AdminHomePageViewModel mViewModel = null;
 
     private final static String TAG = UserHomepageActivity.class.getSimpleName();
     private Context mContext = null;
 
     private RecyclerView recyclerView;
-    private MainListAdapter mainListAdapter;
+    private AdminListAdapter mainListAdapter;
     private List<MainListData> mainListDataList = new ArrayList<>();
     private Button btnSideView = null;
 
@@ -54,10 +46,10 @@ public class UserHomepageActivity extends AppCompatActivity implements View.OnCl
 
         //Remove notification bar and set the context view
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_user_homepage);
+        setContentView(R.layout.activity_admin_homepage);
 
         //set the view model
-        this.mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory()).get(UserHomePageViewModel.class);
+        this.mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory()).get(AdminHomePageViewModel.class);
 
         //Call to init the ui
         initUI();
@@ -121,7 +113,7 @@ public class UserHomepageActivity extends AppCompatActivity implements View.OnCl
 
         recyclerView = findViewById(R.id.recyclerViewMainOptions);
         //add adapters and on touch listener and grid layout
-        mainListAdapter = new MainListAdapter(mainListDataList);
+        mainListAdapter = new AdminListAdapter(mainListDataList);
         RecyclerView.LayoutManager manager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(mainListAdapter);
@@ -132,16 +124,16 @@ public class UserHomepageActivity extends AppCompatActivity implements View.OnCl
     private void dataPrepare() {
 
         //TODO: remove the age param
-        MainListData data = new MainListData("Account Information", 25);
+        MainListData data = new MainListData("Open Tickets", 25);
         mainListDataList.add(data);
-        data = new MainListData("Survey", 20);
-        mainListDataList.add(data);
-        data = new MainListData("Product Guide", 20);
-        mainListDataList.add(data);
-        data = new MainListData("Diagnosis Tool", 20);
-        mainListDataList.add(data);
-        data = new MainListData("Assembly Guide", 20);
-        mainListDataList.add(data);
+//        data = new MainListData("Survey", 20);
+//        mainListDataList.add(data);
+//        data = new MainListData("Product Guide", 20);
+//        mainListDataList.add(data);
+//        data = new MainListData("Diagnosis Tool", 20);
+//        mainListDataList.add(data);
+//        data = new MainListData("Assembly Guide", 20);
+//        mainListDataList.add(data);
 
 
 //        Collections.sort(mainListDataList, new Comparator() {
@@ -200,12 +192,10 @@ public class UserHomepageActivity extends AppCompatActivity implements View.OnCl
             //Call to prompt user to change their password
             showChangePasswordDialog();
 
-
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -215,9 +205,8 @@ public class UserHomepageActivity extends AppCompatActivity implements View.OnCl
 
             case R.id.btnSideMenu:
 
-
                 //add popup menu to the button
-                PopupMenu po=new PopupMenu(UserHomepageActivity.this, view);
+                PopupMenu po=new PopupMenu(AdminHomePageActivity.this, view);
                 po.getMenuInflater().inflate(R.menu.main_menu, po.getMenu());
                 po.setOnMenuItemClickListener(this::onOptionsItemSelected);
 

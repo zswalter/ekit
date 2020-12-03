@@ -1,19 +1,20 @@
 package com.oakland.ekit
 
+import java.io.Serializable
+
 
 class Constants {
 
 
     companion object{
 
-        private val test = ""
-
-
+        //The api value http request url
+        val API_URL = "http://192.168.4.44:8080/api/"
 
         //User data ref values
-        enum class UserData{
+        enum class UserData{ //TODO: update these options
 
-            FirstName, LastName, DOB, UserId, IsSpecialUser, Email;
+            FirstName, LastName, UserId, Email, ImageURL, Activated, LangKey, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate, Authorities, UserName;
 
 
             //Used to get json key for the value
@@ -21,12 +22,21 @@ class Constants {
 
                 return when(this){
 
-                    FirstName -> "first_name"
-                    LastName -> "last_name"
-                    DOB -> "dob"
-                    UserId -> "user_id"
-                    IsSpecialUser -> "is_special_user"
-                    Email -> "email_address"
+                    UserId -> "id"
+                    UserName -> "login"
+                    FirstName -> "firstName"
+                    LastName -> "lastName"
+                    Email -> "email"
+                    ImageURL -> "imageUrl"
+                    Activated -> "activated"
+                    LangKey -> "langKey"
+                    CreatedBy -> "createdBy"
+                    CreatedDate -> "createdDate"
+                    LastModifiedBy -> "lastModifiedBy"
+                    LastModifiedDate -> "lastModifiedDate"
+                    Authorities -> "authorities"
+
+
 
                 }
 
@@ -89,6 +99,24 @@ class Constants {
 
 
                 return list
+
+            }
+
+
+
+        }
+
+
+        //Ticket item
+        class Ticket: Serializable{
+
+
+            val id: Int
+
+            constructor(id: Int){
+
+                this.id = id
+
 
             }
 

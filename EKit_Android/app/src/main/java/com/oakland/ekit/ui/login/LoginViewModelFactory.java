@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.annotation.NonNull;
 
 import com.oakland.ekit.viewModels.AccountInformationViewModel;
+import com.oakland.ekit.viewModels.AdminHomePageViewModel;
+import com.oakland.ekit.viewModels.OpenTicketsViewModel;
 import com.oakland.ekit.viewModels.SurveyViewModel;
 import com.oakland.ekit.viewModels.UserHomePageViewModel;
 import com.oakland.ekit.data.LoginDataSource;
@@ -78,6 +80,10 @@ public class LoginViewModelFactory implements ViewModelProvider.Factory {
             return (T) new AccountInformationViewModel(loginRepository);
         } if (modelClass.isAssignableFrom(SurveyViewModel.class)) {
             return (T) new SurveyViewModel(loginRepository);
+        } if (modelClass.isAssignableFrom(AdminHomePageViewModel.class)) {
+            return (T) new AdminHomePageViewModel(loginRepository);
+        } if (modelClass.isAssignableFrom(OpenTicketsViewModel.class)) {
+            return (T) new OpenTicketsViewModel(loginRepository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

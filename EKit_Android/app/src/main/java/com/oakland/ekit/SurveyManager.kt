@@ -66,6 +66,18 @@ class SurveyManager(questionList: QuestionList) {
 
     }
 
+    //Used to get the users selcted survey answers to submit
+    fun getAnswersForSubmittion() {
+
+
+
+
+        //TODO: finish
+
+
+
+
+    }
 
 
 

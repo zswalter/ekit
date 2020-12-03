@@ -1,5 +1,7 @@
 package com.oakland.ekit.data;
 
+import androidx.lifecycle.MutableLiveData;
+
 import com.oakland.ekit.SettingsManager;
 import com.oakland.ekit.data.model.LoggedInUser;
 
@@ -13,6 +15,8 @@ public class LoginRepository {
 
     private static volatile LoginRepository instance;
 
+    public MutableLiveData<Result<LoggedInUser>> mLoginResult = new MutableLiveData<>();
+
     private LoginDataSource dataSource;
 
     // If user credentials will be cached in local storage, it is recommended it be encrypted //TODO:??
@@ -24,7 +28,6 @@ public class LoginRepository {
 
         //set the data source
         this.dataSource = dataSource;
-
 
         //see if we have a user to login auto
         if(SettingsManager.sharedInstance.getSavedLoggedInUser() != null){
@@ -75,14 +78,31 @@ public class LoginRepository {
     }
 
     //Used to
-    public Result<LoggedInUser> login(String username, String password) {
+    public void login(String username, String password) {
+
         // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
+        dataSource.login(username, password, this); //TODO the result will be handled later from a observer calls
+
+//        Result<LoggedInUser> result = dataSource.login(username, password);
+//        if (result instanceof Result.Success) {
+//            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+//        }
+//        return result; //todo: i think instead of a return we will just have to wait for the result to be passed in callback
+
+
+    }
+
+
+    public void setLogedInUser(Result<LoggedInUser> result){
+
         if (result instanceof Result.Success) {
             setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
         }
-        return result;
+
+
     }
+
+
 
     //Used to get the logged in user
     public LoggedInUser getUser(){

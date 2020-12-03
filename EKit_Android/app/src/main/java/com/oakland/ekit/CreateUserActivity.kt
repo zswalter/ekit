@@ -76,7 +76,7 @@ class CreateUserActivity : AppCompatActivity() {
         if(validateText()){
 
             //after validation, call to create the new user
-            if (ServerManager.sharedInstance.createNewUser(this.textFirstName!!.text.toString()!!, this.textLastName!!.text.toString()!!, this.textEmail!!.text.toString()!!, this.textPassword!!.text.toString()!!)){
+            if (ServerManager.createNewUser(this.textFirstName!!.text.toString()!!, this.textLastName!!.text.toString()!!, this.textEmail!!.text.toString()!!, this.textPassword!!.text.toString()!!)){
                 //success!
                 //Display to user and return to login screen
                 AlertDialog.Builder(this)

@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,6 +14,7 @@ import androidx.core.view.get
 import androidx.lifecycle.ViewModelProviders
 import com.oakland.ekit.ui.login.LoginViewModelFactory
 import com.oakland.ekit.viewModels.SurveyViewModel
+import kotlinx.android.synthetic.main.activity_user_information.*
 
 
 class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, View.OnClickListener {
@@ -24,6 +27,7 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
     private var btnNext: Button? = null
     private var btnBack: Button? = null
     private var txtQuestionText: TextView? = null
+    private var isDoneNext = false
 
 
     private var mSurveyManager: SurveyManager? = null
@@ -40,11 +44,42 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
         setContentView(R.layout.activity_survey)
         setSupportActionBar(findViewById(R.id.toolbar))
 
-        //init the survey manager
-        this.mSurveyManager = SurveyManager(Constants.Companion.SurveyQuestionLists().generateQuestionList1())
 
-        //call to init the ui
-        initUi()
+        val thread = Thread(Runnable {
+
+            try {
+
+                //make a server request for the survey
+                val survey = ServerManager.getSurvey()
+
+                if (survey != null) { //check if the user is activated and should be able to login
+
+                    Handler(Looper.getMainLooper()).post { //Perform on main thread
+
+                        //TODO: Finish
+
+                        //init the survey manager with the survey
+                        this.mSurveyManager = SurveyManager(survey)
+
+                        //call to init the ui
+                        initUi()
+
+                        //display success
+                        //Toast.makeText(this, "Survey Loaded Successfully", Toast.LENGTH_LONG).show()
+
+                    }
+
+
+                } else { //TODO: does this actually work??
+                    throw Exception()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+            }
+        })
+
+        thread.start()
 
 
 
@@ -59,6 +94,8 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
         this.btnBack = findViewById(R.id.btnBack)
         this.btnBack!!.setOnClickListener(this)
         this.txtQuestionText = findViewById(R.id.txtSurveyQuestion)
+
+        this.btnNext!!.visibility = View.VISIBLE
 
         //get the first question from the survey manager
         val firstQuestion = mSurveyManager!!.startSurvey()
@@ -117,10 +154,20 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
 
         //see if we have a next question
         if(this.mSurveyManager!!.isNext()){
-            this.btnNext!!.visibility = View.VISIBLE
+
+            //not done
+            isDoneNext = false
+
+            this.btnNext!!.text = "NEXT QUESTION"
+
         }else{
-            this.btnNext!!.visibility = View.GONE
-            //TODO: show submit survey button
+
+            //done is next
+            isDoneNext = true
+
+            this.btnNext!!.text = "SUBMIT SURVEY"
+
+            //TODO: show submit survey button !!!!!!!!!!!!!!!!!!! and add a counter for the question number that they are one
         }
 
         //see if we have a previous question
@@ -131,8 +178,6 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
         }
 
     }
-
-
 
 
     override fun onCheckedChanged(rg: RadioGroup?, radioButtonID: Int) {
@@ -158,19 +203,50 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
 
             btnNext ->{
 
-                if (radioIndex != -1){ //if a index was selected
+                if(isDoneNext){ //last question so prompt the survey to be submitted
 
-                    //submit the answer for the question to the manager
-                    this.mSurveyManager!!.submitAnswer(radioIndex)
+                    AlertDialog.Builder(this).setTitle("Submit Survey").setMessage("Are you sure you wish to submit the survey?").setNegativeButton("Dismiss") { dialog, which ->
 
-                    //move on
-                    this.generateQuestionsUI(this.mSurveyManager!!.moveNext())
+                        //Dismiss
+                        dialog.dismiss()
+
+                    }.setPositiveButton("Submit") { _, _ ->
+
+                        if (radioIndex != -1){ //if a index was selected
+
+                            //submit the answer for the question to the manager
+                            this.mSurveyManager!!.submitAnswer(radioIndex)
+
+                        }else{
+                            //nothing selected
+                            Toast.makeText(this, "You must first select something!", Toast.LENGTH_SHORT).show()
+                        }
+
+                        //call to submit the survey
+                        this.submitSurveyToServer()
+
+                    }.setCancelable(true).show()
+
 
                 }else{
-                    //nothing selected
-                    Toast.makeText(this, "You must first select something!", Toast.LENGTH_SHORT).show()
+
+                    if (radioIndex != -1){ //if a index was selected
+
+                        //submit the answer for the question to the manager
+                        this.mSurveyManager!!.submitAnswer(radioIndex)
+
+                        //move on
+                        this.generateQuestionsUI(this.mSurveyManager!!.moveNext())
+
+                    }else{
+                        //nothing selected
+                        Toast.makeText(this, "You must first select something!", Toast.LENGTH_SHORT).show()
+
+                    }
+
 
                 }
+
 
             }
 
@@ -182,6 +258,26 @@ class SurveyActivity : AppCompatActivity(), RadioGroup.OnCheckedChangeListener, 
             }
 
         }
+
+    }
+
+
+    //Used to submit the survey to the server
+    private fun submitSurveyToServer(){
+
+        //TODO: finish
+
+        val usersSurveyAnswers = this.mSurveyManager!!.getAnswersForSubmittion()
+
+        AlertDialog.Builder(this).setTitle("Submitted!").setMessage("Your survey has been submitted to our team for review").setPositiveButton("Continue") { dialog, which ->
+
+            //go back to the home page
+            super.onBackPressed()
+
+        }.setCancelable(false).show()
+
+
+
 
     }
 
