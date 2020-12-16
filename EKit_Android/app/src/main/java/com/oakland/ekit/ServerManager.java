@@ -3,6 +3,7 @@ package com.oakland.ekit;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -21,7 +22,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.oakland.ekit.Constants.Companion.Ticket;
+
+import com.oakland.ekit.Constants.Companion.*;
+
 
 public class ServerManager {
 
@@ -30,9 +33,7 @@ public class ServerManager {
 
     private static String authenticationTokenKey = null;
 
-    private static String adminToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYwOTUzNzkxM30.wfIqMk--0eKozjI6QLlwkYttLtX7vccWzHyGMZk_KbGyfk-sceyVgBgRuXnZMhOEcKDDrzQGZiWkLyPkPx94Tw";
-
-
+    private static String adminToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxMDQwNTA1NH0.3PyvL08jE1xskouOyFppVvrUN2ZDyaJaUTvLg0xVgDolzl-usQWn3kIB5PFZ2M_FUM-zJQN1maLdFoLaVqO1KQ";
 
     private static String TAG = ServerManager.class.getSimpleName();
 
@@ -48,7 +49,7 @@ public class ServerManager {
     //Used to login a user and return a json object with the users authentication credentials
     public static JSONObject userLogin(String username, String pass) throws Exception{
 
-        try{
+        try{ //TODO: need to request admin user token before app is ready to go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
             //request the authentication token TODO: only need to do this the one time and then save token until we log out of app if token exists, login again
             JsonObject testRequestBody = new JsonObject();
@@ -81,7 +82,7 @@ public class ServerManager {
 
     }
 
-    //Used to request that a users info is updated //TODO:
+    //Used to request that a users info is updated //TODO: work it out to work without admin elevation???? no we will just request them at start
     public static UserInfo updateUserInfo(UserInfo newUserInfo) throws Exception{
 
 
@@ -110,31 +111,51 @@ public class ServerManager {
 
     }
 
-    //Used to create a new user on the server //TODO:
-    public static boolean createNewUser(String fName, String lName, String username, String pass){
+    //Used to create a new user on the server //TODO: Finish?
+    public static boolean createNewUser(String fName, String lName, String username, String pass, String email) throws Exception{
+
+
 
         //TODO: finish by calling to server and get response?
 
         try{
 
-            //Make the call to the server to create the user
+            //wrap the user info param
+            JsonObject newUserObject = new JsonObject();
+
+            newUserObject.addProperty("activated", true); //activated
+
+            //authorities
+            JsonArray permissions = new JsonArray(1);
+            permissions.add("ROLE_USER");
+            newUserObject.add("authorities", permissions);
+
+            newUserObject.addProperty("email", email); //email
+            newUserObject.addProperty("firstName", fName); //firstName
+            newUserObject.addProperty("id", 0); //id
+            newUserObject.addProperty("imageUrl", ""); //imageUrl
+            newUserObject.addProperty("langKey", "en"); //langKey
+            newUserObject.addProperty("lastName", lName); //lastName
+            newUserObject.addProperty("login", username); //login
+            newUserObject.addProperty("password", pass); //password
+
+            //Make the call to the server to create the user (with admin token permissions
+            JSONObject postReturnJson = POST("register", newUserObject, adminToken);
+
+            //Success
             return true;
 
         }catch (Exception e){
 
-            Log.d(TAG, e.toString());
-
-            return false;
-
+            throw e;
 
         }
 
 
     }
 
-
     //Used to get the survey from the server
-    public static Constants.Companion.QuestionList getSurvey() throws Exception{
+    public static QuestionList getSurvey() throws Exception{
 
         try{
 
@@ -150,24 +171,52 @@ public class ServerManager {
             JSONArray questionsJsonArray = new JSONArray(responseString);
 
             //create a empty survey list to add the questions to
-            Constants.Companion.QuestionList surveyList = new Constants.Companion.QuestionList();
+            QuestionList surveyList = new QuestionList();
 
             //now go through each of the questions and request their full answers
             for(int i = 0; i<questionsJsonArray.length(); i++){
 
+                //get each question
                 JSONObject surveyQuestionJson = questionsJsonArray.getJSONObject(i);
 
                 //we only care about processing the active questions
                 if(surveyQuestionJson.getBoolean("isActive")){
 
-                    //make a post request to get the survey question now with its answers
-                    JSONObject surveyQuestionWithAnswersJson = POST("survey-controller/get-question-with-answers", new JsonParser().parse(surveyQuestionJson.toString()).getAsJsonObject(), authenticationTokenKey);
+                    //make sure we have a type to base the question type on
+                    if (!surveyQuestionJson.isNull("questionType")){
 
-                    //pass to get the survey question with answers converted into a survey question object
-                    Constants.Companion.QuestionList.Question surveyQuestion = Utilities.Companion.parseQuestionJsonAsSurveyQuestion(surveyQuestionWithAnswersJson);
+                        switch (surveyQuestionJson.getString("questionType")){
 
-                    //Add the survey question to the list
-                    surveyList.getQuestions().add(surveyQuestion);
+                            case "INPUT":
+
+                                //pass to get the survey question with answers converted into a survey question object and add the survey question to the list
+                                surveyList.getQuestions().add(Utilities.Companion.parseQuestionJsonAsSurveyQuestion(null, surveyQuestionJson,  QuestionType.INPUT));
+
+                                break;
+
+                            case "MULTI": //We have multiple answer options to select
+
+                                //make a post request to get the survey question now with its answers
+                                JSONObject surveyQuestionWithAnswersJson = POST("survey-controller/get-question-with-answers", new JsonParser().parse(surveyQuestionJson.toString()).getAsJsonObject(), authenticationTokenKey);
+
+                                //pass to get the survey question with answers converted into a survey question object
+                                QuestionList.Question surveyQuestion = Utilities.Companion.parseQuestionJsonAsSurveyQuestion(surveyQuestionWithAnswersJson, surveyQuestionJson, QuestionType.MULTI);
+
+                                //Add the survey question to the list
+                                surveyList.getQuestions().add(surveyQuestion);
+
+                                break;
+
+                            default:
+
+                                //we don't know this type so lets not do anything with it!
+
+                                break;
+
+
+                        }
+
+                    }
 
                 }
 
@@ -185,7 +234,91 @@ public class ServerManager {
 
     }
 
+    //Used to submit the users survey submission
+    public static JSONObject submitSurvey(JsonObject submissionRequestBody) throws Exception {
 
+        try{
+
+            //make sure we have a authentication
+            if(authenticationTokenKey == null){
+                throw new Exception();
+            }
+
+//            JSONObject testing = new JSONObject("{\n" +
+//                    "    \"id\": 13,\n" +
+//                    "    \"closed\": null,\n" +
+//                    "    \"created\": \"2020-12-15T09:48:00-05:00\",\n" +
+//                    "    \"closedBy\": null,\n" +
+//                    "    \"product\": {\n" +
+//                    "      \"id\": 11,\n" +
+//                    "      \"productImage\": \"https://cdn.shopify.com/s/files/1/2081/1519/products/1600x1067_US_B_Mint_PROFILE-X2.jpg?v=1590502980.png\",\n" +
+//                    "      \"productName\": \"Bike Upgrade Ekit\",\n" +
+//                    "      \"productDescription\": \"A basic kit that provides mid level power and duration.\"\n" +
+//                    "    },\n" +
+//                    "    \"createdBy\": {\n" +
+//                    "      \"id\": 5,\n" +
+//                    "      \"login\": \"zdenny61\",\n" +
+//                    "      \"firstName\": \"Zachary\",\n" +
+//                    "      \"lastName\": \"denny\",\n" +
+//                    "      \"email\": \"zdenny61@outlook.com\",\n" +
+//                    "      \"activated\": true,\n" +
+//                    "      \"langKey\": \"en\",\n" +
+//                    "      \"imageUrl\": \"\",\n" +
+//                    "      \"resetDate\": null\n" +
+//                    "    }\n" +
+//                    "  }");
+//
+//            return testing;
+
+            //make the call and get the response
+            JSONObject response = POST("survey-controller/submit-survey-answers", submissionRequestBody, authenticationTokenKey);
+
+            return response;
+
+
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    //Used to update ticket
+    public static JSONObject updateTicket(JsonObject ticketJson) throws Exception{ //TODO: use this to close ticket
+
+        try {
+
+            //make sure we have a authentication
+            if(authenticationTokenKey == null){
+                throw new Exception();
+            }
+
+            return new JSONObject(PUT("tickets", ticketJson, authenticationTokenKey));
+
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
+
+    //Used to add a new ticket comment
+    public static JSONObject addTicketComment(JsonObject ticketCommentJson) throws Exception{ //TODO: use this to make reply from admin
+
+        try {
+
+            //make sure we have a authentication
+            if(authenticationTokenKey == null){
+                throw new Exception();
+            }
+
+            return POST("ticket-comments", ticketCommentJson, authenticationTokenKey);
+
+        }catch (Exception e){
+            throw e;
+        }
+
+
+    }
 
     //Used to get all the open ticket items from the server
     public static ArrayList<Ticket> getOpenTickets() throws Exception{
@@ -198,16 +331,97 @@ public class ServerManager {
             }
 
             ArrayList<Ticket> openTickets = new ArrayList<>();
-
-            //make the request to get all the tickets
-            String responseString = GET("ticket-comments", authenticationTokenKey);
+            ArrayList<TicketComment> openTicketComments = new ArrayList<>();
 
 
+            //make a request to get get all the tickets
+            String responseTicketsString = GET("tickets", authenticationTokenKey);
+
+
+            //parse the json string to a json array
+            JSONArray openTicketsJson = new JSONArray(responseTicketsString);
+
+            //parse out each array element into a ticket comment item
+            for(int i = 0; i<openTicketsJson.length(); i++) {
+
+                JSONObject ticketJsonObject = (JSONObject) openTicketsJson.get(i);
+
+                int id = ticketJsonObject.getInt("id");
+
+                String ticketCreatedDate = ticketJsonObject.getString("created");
+                JSONObject createdBy = ticketJsonObject.getJSONObject("createdBy");
+                String firstName = createdBy.getString("firstName");
+                String lastName = createdBy.getString("lastName");
+
+                Product ticketProduct = null;
+
+                //check if there is a product for this ticket yet
+                if (ticketJsonObject.has("product") && !ticketJsonObject.isNull("product")) {
+                    //extract the product from the ticket
+                    ticketProduct = new Product(ticketJsonObject.getJSONObject("product"));
+                }
+
+                //now check if the ticket is actually closed or not. if so, lets just ignore it.
+                if (ticketJsonObject.isNull("closed")) { // there is a closed date so lets not add this ticket to the view
+                    //create a ticket item
+                    Ticket ticket = new Ticket(id, ticketCreatedDate, new ArrayList<>(0), firstName, lastName, ticketProduct);
+
+                    //add the ticket to the list of tickets
+                    openTickets.add(ticket);
+                } //else we don't want to add the ticket because it has a close date on it
+
+            }
+
+
+
+            //make the request to get all the ticket comments
+            String responseTicketCommentsString = GET("ticket-comments", authenticationTokenKey);
+
+            //parse the json string to a json array
+            JSONArray openTicketCommentsJson = new JSONArray(responseTicketCommentsString);
+
+            //parse out each array element into a ticket comment item
+            for(int i = 0; i<openTicketCommentsJson.length(); i++){
+
+                JSONObject ticketCommentJsonObject = (JSONObject)openTicketCommentsJson.get(i);
+
+                //get values //TODO: add perform null checks
+                int id = ticketCommentJsonObject.getInt("id");
+                String content = ticketCommentJsonObject.getString("content");
+                String ticketCommentCreatedDate = ticketCommentJsonObject.getString("created");
+                TicketUserInfo ticketValues = Utilities.Companion.parseTicketUserInfo(ticketCommentJsonObject.getJSONObject("ticket"));
+                TicketUserInfo user = Utilities.Companion.parseTicketUserInfo(ticketCommentJsonObject.getJSONObject("user"));
+
+                //create the ticket comment object
+                TicketComment ticketComment = new TicketComment(id, content, ticketCommentCreatedDate, ticketValues, user);
+
+                //add the ticket comments to the list of comments
+                openTicketComments.add(ticketComment);
+
+            }
+
+
+            //go through each ticket and see if it has any tickets and comments to put together
+            for (Ticket ticket: openTickets) {
+
+                int ticketID = ticket.getId();
+
+                //go through each comment to see if it belows to the ticket
+                for(TicketComment comment: openTicketComments){
+
+                    //check if this comment belongs to the ticket
+                    if(comment.getTicketValues().getMId().equals(ticketID)){
+                        //this comment is part of our ticket so add the comment to it
+                        ticket.getComments().add(comment);
+                    }
+
+                }
+
+            }
 
 
             //return all the open ticket items
             return openTickets;
-
 
         }catch (Exception e){
             throw e;
@@ -215,11 +429,8 @@ public class ServerManager {
 
     }
 
-
-
     //Used to make a server GET request to the my sql backend
     private static String GET(String request, String token) throws Exception{
-
 
         try{
 
@@ -334,44 +545,11 @@ public class ServerManager {
             //make the request body json object into a string value
             String jsonInputString = requestBody.toString();
 
-//
-//            if( jsonInputString != null){
-//
-//                DataOutputStream out = new DataOutputStream(con.getOutputStream());
-//                out.writeBytes(jsonInputString);
-//                out.flush();
-//                out.close();
-//            }
-//
-
-//            //con.connect();
-//            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-//            String temp = null;
-//            StringBuilder sb = new StringBuilder();
-//            while((temp = in.readLine()) != null){
-//                sb.append(temp).append(" ");
-//            }
-//            String result = sb.toString();
-//            in.close();
-
             //create a output stream to input the request body into the server
             try(OutputStream os = con.getOutputStream()) {
                 byte[] input = jsonInputString.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
-
-//            InputStream _is;
-//            if (con.getResponseCode() / 100 == 2) { // 2xx code means success
-//                _is = con.getInputStream();
-//            } else {
-//
-//                _is = con.getErrorStream();
-//
-//                //String result = getStringFromInputStream(_is);
-//                Log.i("Error != 2xx", "result");
-//            }
-//
-//            return "";
 
             //create a buffer reader to read all response from the server
             try(BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), "utf-8"))) {
@@ -412,3 +590,6 @@ public class ServerManager {
     }
 
 }
+
+
+

@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,6 +20,10 @@ import androidx.lifecycle.ViewModelProviders
 import com.oakland.ekit.ui.login.LoginViewModelFactory
 import com.oakland.ekit.viewModels.AccountInformationViewModel
 import kotlinx.android.synthetic.main.activity_user_information.*
+import java.time.LocalDate
+import java.time.Period
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 class UserInformationActivity : AppCompatActivity() {
@@ -52,7 +57,6 @@ class UserInformationActivity : AppCompatActivity() {
         //Call to init the UI
         initUI(mViewModel!!.getUserInfo())
 
-        //MagicAppRestart.doRestart(this)
 
     }
 
@@ -101,7 +105,6 @@ class UserInformationActivity : AppCompatActivity() {
 
         }
 
-
         //set the text box's info
         this.setTextBoxs(info)
 
@@ -132,9 +135,17 @@ class UserInformationActivity : AppCompatActivity() {
             this.mTxtEmailAddress!!.setText(info.mEmail)
         }
 
-        //member since box
-        this.mLblMemberSince!!.text = "Member Since: ${info.mCreatedDate}" //TODO: make this look better then the raw date time values. maybe just make "mm/dd/yyyy"
+        //because the date time zone conventions require sdk check, only add if it fits the check
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
+            val date = ZonedDateTime.parse(info.mCreatedDate)
+            this.mLblMemberSince!!.text = ("Member Since: ${DateTimeFormatter.ofPattern("MM/dd/yyyy").format(date)} ")
+            //DateTimeFormatter.ofPattern("E, MMM dd, hh:mm a").format(messageModel.messageTime)
+        } else {
+            //member since box
+            this.mLblMemberSince!!.text = "Member Since: ${info.mCreatedDate}"
+
+        }
 
     }
 
@@ -191,15 +202,13 @@ class UserInformationActivity : AppCompatActivity() {
                 newInfo.mEmail != currentUserData.mEmail
         ){//User info changed. Lets process and submit to server
 
-            //TODO: update the server by making a request to the view model so that data is changed both in the apps internals and the server side
-
             val thread = Thread(Runnable {
                 try {
 
-
+                    //Update the user info on the server and the app
                     val updatedValues = this.mViewModel!!.updateUser(newInfo)
 
-
+                    //make sure the update value is not null
                     if (updatedValues != null) { //check if the user is activated and should be able to login
 
                         Handler(Looper.getMainLooper()).post { //Perform on main thread
@@ -212,13 +221,10 @@ class UserInformationActivity : AppCompatActivity() {
                             //display success
                             Toast.makeText(this, "Information Updated Successfully", Toast.LENGTH_LONG).show()
 
-                            //test
-                            restart(this)
-
                         }
 
 
-                    } else { //TODO: does this actually work??
+                    } else {
                         throw Exception()
                     }
                 } catch (e: Exception) {
@@ -245,29 +251,5 @@ class UserInformationActivity : AppCompatActivity() {
 
     }
 
-    fun restart(context: Context) {
-        val mainIntent: Intent = IntentCompat.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_LAUNCHER)
-        mainIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.applicationContext.startActivity(mainIntent)
-        System.exit(0)
-    }
 
-
-}
-
-
-/** This activity shows nothing; instead, it restarts the android process  */
-class MagicAppRestart : Activity() {
-    // Do not forget to add it to AndroidManifest.xml
-// <activity android:name="your.package.name.MagicAppRestart"/>
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        System.exit(0)
-    }
-
-    companion object {
-        fun doRestart(anyActivity: Activity) {
-            anyActivity.startActivity(Intent(anyActivity.applicationContext, MagicAppRestart::class.java))
-        }
-    }
 }

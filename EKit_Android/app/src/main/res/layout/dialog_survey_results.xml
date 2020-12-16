@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imgSuggestedProduct"
+        android:layout_width="match_parent"
+        android:layout_height="147dp"
+        app:srcCompat="@drawable/solar_placeholder" />
+
+    <TextView
+        android:id="@+id/lblSuggestedProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:editable="false"
+        android:text="Suggested Product: N/A"
+        android:textSize="18sp" />
+
+    <EditText
+        android:id="@+id/txtUsersComments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="If you wish to hear from a representative about your product suggestion please type your questions in the given box."
+        android:inputType="textMultiLine" />
+
+    <Button
+        android:id="@+id/btnFinishResults"
+        android:layout_width="match_parent"
+        android:layout_height="61dp"
+        android:backgroundTint="?attr/colorPrimary"
+        android:text="Continue"
+        android:textColor="@color/WhiteSmoke" />
+
+</LinearLayout>

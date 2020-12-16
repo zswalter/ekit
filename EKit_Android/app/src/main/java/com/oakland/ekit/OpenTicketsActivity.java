@@ -77,10 +77,6 @@ public class OpenTicketsActivity extends AppCompatActivity implements View.OnCli
 
     private void dataPrepare() {
 
-
-
-        //TODO: call the server to get all the ticket items
-
         Thread thread = new Thread(() -> {
             try  {
 

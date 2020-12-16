@@ -4,10 +4,11 @@ import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.oakland.ekit.Constants.Companion.UserData
 import org.json.JSONArray
+import java.io.Serializable
 
 
 //User info object
-class UserInfo(fName: String?, lName: String?, userID: String?, isSpecialUser: Boolean?, email: String?, imageURL: String?, active: Boolean?, langKey: String?, createdBy: String?, createdDate: String?, lastModifiedBy: String?, lastedModifiedDate: String?, userName: String?, authorities: JsonArray?){
+class UserInfo(fName: String?, lName: String?, userID: String?, isSpecialUser: Boolean?, email: String?, imageURL: String?, active: Boolean?, langKey: String?, createdBy: String?, createdDate: String?, lastModifiedBy: String?, lastedModifiedDate: String?, userName: String?, authorities: JsonArray?): Serializable{
 
 
     val mUserID = userID

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.oakland.ekit.MainListData;
@@ -19,6 +20,11 @@ import com.oakland.ekit.R;
 import com.oakland.ekit.SurveyActivity;
 import com.oakland.ekit.UserInformationActivity;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 
 public class OpenTicketsListAdapter extends RecyclerView.Adapter {
@@ -35,7 +41,7 @@ public class OpenTicketsListAdapter extends RecyclerView.Adapter {
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         mContext = viewGroup.getContext();
         View itemView = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.main_list_row, viewGroup, false);
+                .inflate(R.layout.ticket_list_row, viewGroup, false);
         return new MyViewHolder(itemView);
     }
 
@@ -52,17 +58,30 @@ public class OpenTicketsListAdapter extends RecyclerView.Adapter {
     public void onBindViewHolderTest(@NonNull MyViewHolder holder, int position) {
         OpenTicketListData data= (OpenTicketListData) mainListDataList.get(position);
 
-        //to signify disabled items
-        if(position <= 1){
+        //set the color of the holder
+        holder.parent.setBackgroundColor(mContext.getColor(R.color.primaryColor));
 
-            holder.parent.setBackgroundColor(mContext.getColor(R.color.primaryColor));
+        //set the title label text
+        holder.txtTicketID.setText("ID: " + data.ticketItem.getId());
+
+
+        //because the date time zone conventions require sdk check, only add if it fits the check
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            ZonedDateTime date = ZonedDateTime.parse(data.ticketItem.getCreatedDate());
+
+            // get the number of days its been open for
+            int numberOfDays = Period.between(date.toLocalDate(), LocalDate.now()).getDays();
+
+            holder.txtTicketOpenDate.setText("Open Since: " + DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss a").format(date) + " (" + numberOfDays + " Days)");
+
+            //DateTimeFormatter.ofPattern("E, MMM dd, hh:mm a").format(messageModel.messageTime)
+
 
         }else{
-            //disabled
-            holder.parent.setBackgroundColor(mContext.getColor(R.color.disabledOrange));
+            holder.txtTicketOpenDate.setText("Open Since: " + data.ticketItem.getCreatedDate());
         }
 
-        holder.cardName.setText(data.name);
 
 
         //add a on click listener to the holder item
@@ -85,12 +104,14 @@ public class OpenTicketsListAdapter extends RecyclerView.Adapter {
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView cardName;
-        LinearLayout parent;
+        TextView txtTicketID;
+        TextView txtTicketOpenDate;
+        ConstraintLayout parent;
         public MyViewHolder(View itemView) {
             super(itemView);
             parent = itemView.findViewById(R.id.parent);
-            cardName = itemView.findViewById(R.id.cardName);
+            txtTicketID = itemView.findViewById(R.id.txtTicketId);
+            txtTicketOpenDate = itemView.findViewById(R.id.txtOpenSince);
         }
     }
 }

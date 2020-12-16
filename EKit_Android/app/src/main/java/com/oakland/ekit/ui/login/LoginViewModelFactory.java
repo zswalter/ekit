@@ -8,6 +8,7 @@ import com.oakland.ekit.viewModels.AccountInformationViewModel;
 import com.oakland.ekit.viewModels.AdminHomePageViewModel;
 import com.oakland.ekit.viewModels.OpenTicketsViewModel;
 import com.oakland.ekit.viewModels.SurveyViewModel;
+import com.oakland.ekit.viewModels.TicketItemViewModel;
 import com.oakland.ekit.viewModels.UserHomePageViewModel;
 import com.oakland.ekit.data.LoginDataSource;
 import com.oakland.ekit.data.LoginRepository;
@@ -84,6 +85,8 @@ public class LoginViewModelFactory implements ViewModelProvider.Factory {
             return (T) new AdminHomePageViewModel(loginRepository);
         } if (modelClass.isAssignableFrom(OpenTicketsViewModel.class)) {
             return (T) new OpenTicketsViewModel(loginRepository);
+        } if (modelClass.isAssignableFrom(TicketItemViewModel.class)) {
+            return (T) new TicketItemViewModel(loginRepository);
         } else {
             throw new IllegalArgumentException("Unknown ViewModel class");
         }

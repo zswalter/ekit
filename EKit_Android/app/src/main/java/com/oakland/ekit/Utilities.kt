@@ -1,14 +1,19 @@
 package com.oakland.ekit
 
-import com.google.gson.JsonArray
+import android.os.Build
+import com.google.gson.*
 import com.oakland.ekit.Constants.Companion.UserData
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
+import com.oakland.ekit.Constants.Companion.SurveyQuestionAnswer
+import java.time.ZonedDateTime
+import kotlin.jvm.Throws
 
 
 class Utilities{
+
 
     //Used to parse user info data from json object
     fun parseUserInfo(jo: JSONObject): UserInfo{
@@ -103,6 +108,46 @@ class Utilities{
     }
 
     companion object{
+
+        //Used to parse user info data from json object
+        fun parseTicketUserInfo(jo: JSONObject): TicketUserInfo{
+
+            var mId: Int? = null
+            var mCreatedBy: UserInfo? = null
+            var mClosed: String? = null
+            var mCreated: String? = null
+            //var mClosedBy: UserInfo? = null
+
+            //check each json key //TODO: add "product"
+            if (jo.has("id")){
+                mId = jo.getInt("id")
+            }
+            if (jo.has("closed")){
+                mClosed = jo.getString("closed")
+            }
+            if (jo.has("created")){
+                mCreated = jo.getString("created")
+            }
+//            if (jo.has("closedBy")){
+//
+//                //TODO: temp for now since null
+//                mClosedBy = parseUserInfo(JSONObject(""))
+////                if(parseUserInfo(jo.getJSONObject("closedBy")) != null){
+////                    mClosedBy = parseUserInfo(jo.getJSONObject("closedBy"))
+////                }else{
+////                    mClosedBy = parseUserInfo(JSONObject(""))
+////                }
+//
+//            }
+            if (jo.has("createdBy")){
+                mCreatedBy = parseUserInfo(jo.getJSONObject("createdBy"))
+            }
+
+            //return the final result
+            return TicketUserInfo(mId, mClosed, mCreated, mCreatedBy) //TODO: add closedBy
+
+        }
+
 
         //Used to parse user info data from json object
         fun parseUserInfo(jo: JSONObject): UserInfo{
@@ -219,29 +264,44 @@ class Utilities{
 
 
         //Used to parse as json survey question into a Survey Question object
-        fun parseQuestionJsonAsSurveyQuestion(questionAnswerObject: JSONObject): Constants.Companion.QuestionList.Question{
+        fun parseQuestionJsonAsSurveyQuestion(questionAnswerObject: JSONObject?, questionObject: JSONObject, questionType: Constants.Companion.QuestionType): Constants.Companion.QuestionList.Question{
 
 
             try { //TODO: json keys to constants and perform checks before setting a variable to make sure its in the json object
 
-                //get all the possible answers
-                val answers = questionAnswerObject.getJSONArray("answerTextList")
-                val questionObject = questionAnswerObject.getJSONObject("surveyQuestion")
 
                 val questionId = questionObject.getInt("id")
                 val questionText = questionObject.getString("questionText")
                 val isActive = questionObject.getBoolean("isActive")
-                val questionType = questionObject.getString("questionType")
+                //val questionType = questionObject.getString("questionType")
 
-                //convert the answers list json to a string array to pass
-                val answersList = Array(answers.length()) {
-                    answers.getString(it)
+                var answersList: Array<String>? = null
+
+                //switch on the question type to determine if answers need to be parsed out
+                when(questionType){
+
+                    Constants.Companion.QuestionType.MULTI -> { //TODO: add any more that needs answer parsed out
+                        //Null check
+                        if(questionAnswerObject != null){
+
+                            //get all the possible answers
+                            val answers = questionAnswerObject!!.getJSONArray("answerTextList")
+
+                            //convert the answers list json to a string array to pass
+                            answersList = Array(answers.length()) {
+                                answers.getString(it)
+                            }
+
+                        }
+
+
+
+                    }
+
                 }
 
-                //TODO: handle question types ("MULTI", ect...)
-
                 //return the generated question object
-                return Constants.Companion.QuestionList.Question(questionId, false, questionText, answersList)
+                return Constants.Companion.QuestionList.Question(questionId, questionText, answersList, questionType)
 
 
             }catch (e: Exception){
@@ -255,6 +315,77 @@ class Utilities{
 
         }
 
+        //Used to parse the survey submission data into the request json for the api call
+        @Throws(Exception::class)
+        fun generateSurveySubmissionRequestBody(userID: Int, submissionAnswers: Array<SurveyQuestionAnswer>): JsonObject{
+
+            try {
+
+                var jsonBody = JsonObject()
+                var resultMapObject = JsonObject()
+
+                //add the user id
+                jsonBody.addProperty("userId", userID)
+
+                //go through and add each of the selected answers
+                for(questionAnswer in submissionAnswers){
+
+                    //add the question id and the selected answer text to the map object
+                    resultMapObject.addProperty("${questionAnswer.questionID}", "${questionAnswer.answerString}")
+
+                }
+
+                //add the result map to the body
+                jsonBody.add("surveyResultsMap", resultMapObject)
+
+                //return the created json
+                return jsonBody
+
+
+            }catch (e: JsonIOException){
+
+                throw e
+
+            }
+
+        }
+
+
+        //Used to make a ticket request body json
+        @Throws(Exception::class)
+        fun generateTicketCommentRequestBody(ticketBody: JSONObject, content: String, userObject: JSONObject ): JsonObject{
+
+            try {
+
+                var jsonUser = JsonParser().parse(userObject.toString()).asJsonObject
+                var jsonTicketBody = JsonParser().parse(ticketBody.toString()).asJsonObject
+
+                var jsonBody = JsonObject()
+
+                var userJson = JsonObject()
+                userJson.add("id", jsonUser.get("id"))
+
+                //because the date time zone conventions require sdk check, only add if it fits the check
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    jsonBody.addProperty("created", ZonedDateTime.now().toString())
+                }
+
+                jsonBody.add("user", userJson)
+                jsonBody.add("ticket", jsonTicketBody)
+                jsonBody.addProperty("content", content)
+                //jsonBody.addProperty()
+
+                //return the created json
+                return jsonBody
+
+
+            }catch (e: JsonIOException){
+
+                throw e
+
+            }
+
+        }
 
 
     }

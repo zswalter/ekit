@@ -63,9 +63,13 @@ public class LoginRepository {
         //tell the settings manager to forget
         SettingsManager.sharedInstance.perfromLogout();
 
+        //clear the live data value
+        this.mLoginResult.postValue(null);
+
         //clear the user data from repo
         user = null;
         dataSource.logout();
+
     }
 
     private void setLoggedInUser(LoggedInUser user) {

@@ -18,10 +18,28 @@ class SurveyManager(questionList: QuestionList) {
 
     }
 
-    //Used to submit a answer to the question
-    fun submitAnswer(answerIndex: Int){
+    //Used to store a users selected answer to the question
+    fun submitAnswer(answerIndex: Int?, inputTextAnswer: String?){
 
-        this.answers[this.currentQuestionIndex].questionAnswerIndex = answerIndex
+        if(questions.questions!![currentQuestionIndex].questionType != Constants.Companion.QuestionType.INPUT){ //these are values that can have answer selctions
+
+            if(answerIndex != null){
+                //save the users selected
+                this.answers[this.currentQuestionIndex].questionAnswerIndex = answerIndex
+                this.answers[this.currentQuestionIndex].answerString = this.questions.questions!![currentQuestionIndex].answerStringArray!![answerIndex]
+
+            }
+
+        }else{ //we need to just take in the string and not the index of selected value
+
+            if(inputTextAnswer != null){
+
+                this.answers[this.currentQuestionIndex].questionAnswerIndex = -1 //indicate that this does not exist
+                this.answers[this.currentQuestionIndex].answerString = inputTextAnswer
+
+            }
+
+        }
 
     }
 
@@ -66,17 +84,18 @@ class SurveyManager(questionList: QuestionList) {
 
     }
 
-    //Used to get the users selcted survey answers to submit
-    fun getAnswersForSubmittion() {
+    //Used to get the users selected survey answers to submit
+    fun getAnswersForSubmission(): Array<SurveyQuestionAnswer> {
 
+        //return all the users selected answers for the survey
+        return this.answers
 
+    }
 
+    //Used to get the current question that we are on
+    fun getCurrentQuestion(): QuestionList.Question{
 
-        //TODO: finish
-
-
-
-
+        return questions.questions!![currentQuestionIndex]
     }
 
 

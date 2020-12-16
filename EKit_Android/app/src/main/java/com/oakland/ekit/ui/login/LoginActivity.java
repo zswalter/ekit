@@ -62,10 +62,15 @@ public class LoginActivity extends AppCompatActivity {
         mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())
                 .get(LoginViewModel.class);
 
-        //create the login result observer //TODO: make sure that this observer is destroyed after you log out to the it does not get called and logged back in
+        //create the login result observer
         Observer<Result<LoggedInUser>> resultObserver = new Observer<Result<LoggedInUser>>() {
             @Override
             public void onChanged(Result<LoggedInUser> loggedInUserResult) {
+
+                //perform null check
+                if(loggedInUserResult == null){
+                    return;
+                }
 
                 //see if its a success result or a failed
                 if (loggedInUserResult instanceof Result.Success) {

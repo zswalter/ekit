@@ -1,6 +1,9 @@
 package com.oakland.ekit
 
+import com.google.gson.JsonObject
+import org.json.JSONObject
 import java.io.Serializable
+import java.time.ZonedDateTime
 
 
 class Constants {
@@ -9,10 +12,10 @@ class Constants {
     companion object{
 
         //The api value http request url
-        val API_URL = "http://192.168.4.44:8080/api/"
+        val API_URL = "http://192.168.4.44:8080/api/" //TODO: this is were you update for server IP!!!!!!!!!
 
         //User data ref values
-        enum class UserData{ //TODO: update these options
+        enum class UserData{
 
             FirstName, LastName, UserId, Email, ImageURL, Activated, LangKey, CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate, Authorities, UserName;
 
@@ -45,24 +48,18 @@ class Constants {
         }
 
 
-        class QuestionList{
+        //question type enum
+        enum class QuestionType{
 
-            val questions: ArrayList<Question> = ArrayList()
+            MULTI, INPUT;
 
-            class Question{
+            //Used to get json key for the value
+            fun key(): String{
 
+                return when(this){
 
-                val questionID: Int
-                val multipleChoice: Boolean
-                val answerStringArray: Array<String>
-                val questionString: String
-
-                constructor(questionID: Int, multipleChoise: Boolean, questionString: String, answerStringArray: Array<String>){
-
-                    this.questionID = questionID
-                    this.multipleChoice = multipleChoise
-                    this.questionString = questionString
-                    this.answerStringArray = answerStringArray
+                    MULTI -> "MULTI"
+                    INPUT -> "INPUT"
 
                 }
 
@@ -71,10 +68,40 @@ class Constants {
         }
 
 
+        //survey question list class
+        class QuestionList{
+
+            val questions: ArrayList<Question> = ArrayList()
+
+            //question list member (question)
+            class Question{
+
+
+                val questionID: Int
+                val answerStringArray: Array<String>?
+                val questionString: String
+                val questionType: QuestionType
+
+                constructor(questionID: Int, questionString: String, answerStringArray: Array<String>?, questionType: QuestionType){
+
+                    this.questionID = questionID
+                    this.questionString = questionString
+                    this.answerStringArray = answerStringArray
+                    this.questionType = questionType
+
+                }
+
+            }
+
+        }
+
+
+        //survey question answer
         class SurveyQuestionAnswer{
 
             val questionID: Int
             var questionAnswerIndex: Int? = null
+            var answerString: String? = null
 
             constructor(questionID: Int){
                 this.questionID = questionID
@@ -83,22 +110,23 @@ class Constants {
         }
 
 
-        //survey question lists
-        class SurveyQuestionLists{
+        //Ticket Comment item
+        class TicketComment: Serializable{
 
+            val id: Int
+            val content: String
+            val commentCreatedDate: String
+            val ticketValues: TicketUserInfo
+            val user: TicketUserInfo
 
-            //test question list
-            fun generateQuestionList1(): QuestionList{
+            constructor(id: Int, content: String, commentCreatedDate: String, ticketValues: TicketUserInfo, user: TicketUserInfo){
 
-                val list = QuestionList()
+                this.id = id
+                this.content = content
+                this.commentCreatedDate = commentCreatedDate
+                this.ticketValues = ticketValues
+                this.user = user
 
-                list.questions!!.add(QuestionList.Question(0, false, "This is test question 1", arrayOf("question1", "question2", "question3")))
-                list.questions!!.add(QuestionList.Question(1, false, "This is test question 2", arrayOf("question1", "question2", "question3", "question4")))
-                list.questions!!.add(QuestionList.Question(2, false, "This is test question 3", arrayOf("question1", "question2", "question3")))
-                list.questions!!.add(QuestionList.Question(3, false, "This is test question 4", arrayOf("question1", "question2", "question3", "question4", "question5")))
-
-
-                return list
 
             }
 
@@ -110,12 +138,21 @@ class Constants {
         //Ticket item
         class Ticket: Serializable{
 
-
             val id: Int
+            val createdDate: String
+            val comments: ArrayList<TicketComment>
+            val firstName: String
+            val lastName: String
+            val ticketProduct: Product?
 
-            constructor(id: Int){
+            constructor(id: Int, createdDate: String, comments: ArrayList<TicketComment>, firstName: String, lastName: String, product: Product?){
 
                 this.id = id
+                this.createdDate = createdDate
+                this.comments = comments
+                this.firstName = firstName
+                this.lastName = lastName
+                this.ticketProduct = product
 
 
             }
@@ -124,6 +161,36 @@ class Constants {
 
         }
 
+
+        //Product object
+        class Product: Serializable{
+
+            var id: Int
+            var productDescription: String
+            var productImage: String
+            var productName: String
+
+            constructor(productObject: JSONObject){
+
+                this.id = productObject.getInt("id")
+                this.productDescription = productObject.getString("productDescription")
+                this.productImage = productObject.getString("productImage")
+                this.productName = productObject.getString("productName")
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+
+        class MessageModel // Constructor
+        (var message: String, var messageType: Int, var messageTime: ZonedDateTime)
 
 
     }

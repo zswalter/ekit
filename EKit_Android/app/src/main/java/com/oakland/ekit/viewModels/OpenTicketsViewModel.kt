@@ -35,8 +35,6 @@ class OpenTicketsViewModel internal constructor(var loginRepository: LoginReposi
             //request the open ticket items from the server
             val openTickets = ServerManager.getOpenTickets()
 
-            openTickets.add(Ticket(1)) //TODO: to test view loading
-
             //save the data for later potential use
             this.mOenTickets = openTickets
 
