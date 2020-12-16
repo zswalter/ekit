@@ -20,6 +20,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_survey" />
+    <include
+        android:id="@+id/containerQuestion"
+        layout="@layout/content_survey" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
