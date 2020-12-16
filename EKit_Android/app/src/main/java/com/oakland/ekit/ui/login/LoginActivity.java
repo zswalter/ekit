@@ -26,8 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.oakland.ekit.AdminHomePageActivity;
+import com.oakland.ekit.Constants;
 import com.oakland.ekit.CreateUserActivity;
 import com.oakland.ekit.R;
+import com.oakland.ekit.ServerManager;
 import com.oakland.ekit.SettingsManager;
 import com.oakland.ekit.SurveyActivity;
 import com.oakland.ekit.UserHomepageActivity;
@@ -35,6 +37,9 @@ import com.oakland.ekit.data.Result;
 import com.oakland.ekit.data.model.LoggedInUser;
 import com.oakland.ekit.ui.login.LoginViewModel;
 import com.oakland.ekit.ui.login.LoginViewModelFactory;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -57,6 +62,32 @@ public class LoginActivity extends AppCompatActivity {
 
         //update settings manager first
         SettingsManager.sharedInstance.updateSettings(mContext);
+
+        //make a thread for the server call
+        Thread thread = new Thread(() -> {
+            try  {
+
+                //Pass to authenticate the admin user to get the admin token
+                JSONObject credentials = ServerManager.sharedInstance.userLogin("admin", "admin", true);
+
+                //if the token went through fine, then we will get the right stuff
+                if(credentials == null){
+
+                    //TODO: does this actually work??
+                    throw new Exception();
+
+
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
+
+
 
         //get view model
         mViewModel = ViewModelProviders.of(this, new LoginViewModelFactory())

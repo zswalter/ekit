@@ -52,15 +52,35 @@ public class OpenTicketsActivity extends AppCompatActivity implements View.OnCli
 
 
         //Call to init the ui
-        initUI();
+        //initUI();
 
         //prepare the data for the table view
-        dataPrepare();
+        //dataPrepare();
+
+    }
+
+    public void clearData() {
+
+        if(mainListDataList != null && mainListAdapter != null){
+            this.mainListDataList.clear(); // clear list
+            this.mainListAdapter.notifyDataSetChanged(); // let your adapter know about the changes and reload view.
+        }
 
 
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        this.clearData(); //TODO: why will this not work!!!!!
+
+        //Call to init the ui
+        initUI();
+        //prepare the data for the table view
+        dataPrepare();
+    }
 
     //Used to init the UI
     private void initUI(){
@@ -76,6 +96,7 @@ public class OpenTicketsActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void dataPrepare() {
+
 
         Thread thread = new Thread(() -> {
             try  {

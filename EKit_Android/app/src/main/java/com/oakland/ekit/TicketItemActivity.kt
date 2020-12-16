@@ -2,20 +2,25 @@ package com.oakland.ekit
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.JsonParser
 import com.oakland.ekit.Constants.Companion.MessageModel
 import com.oakland.ekit.Constants.Companion.Ticket
 import com.oakland.ekit.ui.login.LoginViewModelFactory
 import com.oakland.ekit.viewModels.OpenTicketsViewModel
 import com.oakland.ekit.viewModels.TicketItemViewModel
 import kotlinx.android.synthetic.main.activity_create_user.*
+import org.json.JSONObject
 import org.w3c.dom.Text
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -193,6 +198,24 @@ class TicketItemActivity : AppCompatActivity(), View.OnClickListener {
 
             btnCloseTicket ->{
 
+
+                val test = AlertDialog.Builder(this)
+                        .setTitle("Close Ticket?")
+                        .setMessage("Are you sure you wish to close this ticket?")
+                        .setPositiveButton("Continue") { dialog, which ->
+
+                            //call to close the ticket now
+                            this.closeTicket(JSONObject(this.mTicket!!.ticketDataString))
+
+
+//                            //go back to the home page
+//                            super.onBackPressed()
+
+                        }.setNegativeButton("Cancel") { dialog, which ->
+                            dialog.dismiss()
+                        }.setCancelable(false).show()
+
+
                 //TODO: try and update the ticket with a closed date this would effectively remove the tickets from the view
 
                 //this.mTicket!!.
@@ -201,6 +224,62 @@ class TicketItemActivity : AppCompatActivity(), View.OnClickListener {
 
 
         }
+    }
+
+
+    //Used to close a ticket that is open
+    private fun closeTicket(ticketJson: JSONObject){
+
+
+        val thread = Thread(Runnable {
+
+            try {
+
+                var newTicket = ticketJson
+
+                //because the date time zone conventions require sdk check, only add if it fits the check
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    //"close" the ticket by assigning it a closing day of today
+                    newTicket.put("closed", ZonedDateTime.now())
+
+                }
+
+                //Call the server manager to update ticket to open
+                val updatedTicket = ServerManager.updateTicket(JsonParser().parse(ticketJson.toString()).asJsonObject)
+
+                //if its complete and we have out new closed ticket, we can exit this view now
+                if(updatedTicket != null){
+
+                    Handler(Looper.getMainLooper()).post {
+                        super.onBackPressed()
+                    }
+                }
+
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+
+                Handler(Looper.getMainLooper()).post { //Perform on main thread
+
+                    //Display error message
+                    android.app.AlertDialog.Builder(this).setTitle("Error...").setMessage("A error occurred while processing your survey, please try again.").setPositiveButton("Continue") { dialog, which ->
+
+                        //go back to the home page
+                        super.onBackPressed()
+
+                    }.setCancelable(false).show()
+
+                }
+
+            }
+        })
+
+        thread.start()
+
+
+
+
     }
 
 

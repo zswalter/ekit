@@ -27,7 +27,7 @@ public class LoginDataSource {
                 try  {
 
                     //Pass to authenticate the user via server backend
-                    JSONObject credentials = ServerManager.sharedInstance.userLogin(username, password);
+                    JSONObject credentials = ServerManager.sharedInstance.userLogin(username, password, false);
 
 
                     if(credentials != null){

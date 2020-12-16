@@ -144,8 +144,9 @@ class Constants {
             val firstName: String
             val lastName: String
             val ticketProduct: Product?
+            val ticketDataString: String
 
-            constructor(id: Int, createdDate: String, comments: ArrayList<TicketComment>, firstName: String, lastName: String, product: Product?){
+            constructor(id: Int, createdDate: String, comments: ArrayList<TicketComment>, firstName: String, lastName: String, product: Product?, ticketDataString: String){
 
                 this.id = id
                 this.createdDate = createdDate
@@ -153,6 +154,7 @@ class Constants {
                 this.firstName = firstName
                 this.lastName = lastName
                 this.ticketProduct = product
+                this.ticketDataString = ticketDataString
 
 
             }

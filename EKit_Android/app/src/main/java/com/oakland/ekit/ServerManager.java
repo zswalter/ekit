@@ -30,10 +30,9 @@ public class ServerManager {
 
     public static ServerManager sharedInstance = new ServerManager();
 
-
     private static String authenticationTokenKey = null;
 
-    private static String adminToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxMDQwNTA1NH0.3PyvL08jE1xskouOyFppVvrUN2ZDyaJaUTvLg0xVgDolzl-usQWn3kIB5PFZ2M_FUM-zJQN1maLdFoLaVqO1KQ";
+    private static String adminToken = null; //= "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImF1dGgiOiJST0xFX0FETUlOLFJPTEVfVVNFUiIsImV4cCI6MTYxMDQwNTA1NH0.3PyvL08jE1xskouOyFppVvrUN2ZDyaJaUTvLg0xVgDolzl-usQWn3kIB5PFZ2M_FUM-zJQN1maLdFoLaVqO1KQ";
 
     private static String TAG = ServerManager.class.getSimpleName();
 
@@ -45,13 +44,12 @@ public class ServerManager {
 
     }
 
-
     //Used to login a user and return a json object with the users authentication credentials
-    public static JSONObject userLogin(String username, String pass) throws Exception{
+    public static JSONObject userLogin(String username, String pass, Boolean isAdmin) throws Exception{
 
-        try{ //TODO: need to request admin user token before app is ready to go!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        try{
 
-            //request the authentication token TODO: only need to do this the one time and then save token until we log out of app if token exists, login again
+            //request the authentication token
             JsonObject testRequestBody = new JsonObject();
 
             //create the request body
@@ -64,7 +62,13 @@ public class ServerManager {
 
             //get the token key and save it in server manager for later
             String tokenKey = postReturnJson.getString("id_token");
-            authenticationTokenKey = tokenKey;
+
+            if(!isAdmin){
+                authenticationTokenKey = tokenKey;
+            }else{
+                adminToken = tokenKey;
+            }
+
 
             //request to get the user data info
             String response = GET("account", tokenKey);
@@ -82,21 +86,18 @@ public class ServerManager {
 
     }
 
-    //Used to request that a users info is updated //TODO: work it out to work without admin elevation???? no we will just request them at start
+    //Used to request that a users info is updated
     public static UserInfo updateUserInfo(UserInfo newUserInfo) throws Exception{
-
-
-        //TODO: finsih this!!!!! (currently seems like user does not have access to change their own info unless admin???)
 
         try{
 
             //make sure we have a authentication token to talk with first
-            if(authenticationTokenKey == null){
+            if(authenticationTokenKey == null || adminToken == null){
                 throw new Exception();
             }
 
-            //make the PUT request to the server to update the users account values //TODO: for now sending as admin key for elevated permissions
-            String response = PUT("users", newUserInfo.getJsonObject() , adminToken); //TODO: Would like to use this one
+            //make the PUT request to the server to update the users account values
+            String response = PUT("users", newUserInfo.getJsonObject() , adminToken);
 
             //create a new server user object to represent the new user data
             UserInfo updatedServerUser = Utilities.Companion.parseUserInfo(new JSONObject(response));
@@ -104,21 +105,21 @@ public class ServerManager {
             //return the user info that was saved successfully
             return updatedServerUser;
 
-
         }catch (Exception e){
             throw e;
         }
 
     }
 
-    //Used to create a new user on the server //TODO: Finish?
+    //Used to create a new user on the server
     public static boolean createNewUser(String fName, String lName, String username, String pass, String email) throws Exception{
 
-
-
-        //TODO: finish by calling to server and get response?
-
         try{
+
+            //make sure we have the authentication token
+            if(adminToken == null){
+                throw new Exception();
+            }
 
             //wrap the user info param
             JsonObject newUserObject = new JsonObject();
@@ -298,7 +299,6 @@ public class ServerManager {
             throw e;
         }
 
-
     }
 
     //Used to add a new ticket comment
@@ -316,7 +316,6 @@ public class ServerManager {
         }catch (Exception e){
             throw e;
         }
-
 
     }
 
@@ -352,6 +351,7 @@ public class ServerManager {
                 JSONObject createdBy = ticketJsonObject.getJSONObject("createdBy");
                 String firstName = createdBy.getString("firstName");
                 String lastName = createdBy.getString("lastName");
+                String ticketDataString = ticketJsonObject.toString();
 
                 Product ticketProduct = null;
 
@@ -364,7 +364,7 @@ public class ServerManager {
                 //now check if the ticket is actually closed or not. if so, lets just ignore it.
                 if (ticketJsonObject.isNull("closed")) { // there is a closed date so lets not add this ticket to the view
                     //create a ticket item
-                    Ticket ticket = new Ticket(id, ticketCreatedDate, new ArrayList<>(0), firstName, lastName, ticketProduct);
+                    Ticket ticket = new Ticket(id, ticketCreatedDate, new ArrayList<>(0), firstName, lastName, ticketProduct, ticketDataString);
 
                     //add the ticket to the list of tickets
                     openTickets.add(ticket);
@@ -471,7 +471,7 @@ public class ServerManager {
     }
 
     //Used to perform a http post request with json body for the request
-    private static JSONObject POST(String request, JsonObject requestBody, String tokenKey) throws Exception{ //TODO: might have to pass token and then in that case only add token if its not null
+    private static JSONObject POST(String request, JsonObject requestBody, String tokenKey) throws Exception{
 
         try {
 
